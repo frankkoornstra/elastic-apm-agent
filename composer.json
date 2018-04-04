@@ -1,0 +1,43 @@
+{
+    "name": "techdeco/elastic-apm-agent",
+    "description": "An agent for the Elastic Application Performance Management server",
+    "type": "library",
+    "keywords": ["elastic", "apm", "monitoring", "performance"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank Koornstra",
+            "email": "frank@frankkoornstra.nl",
+            "homepage": "https://frankkoornstra.nl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "platform": {
+            "php": "7.2.2"
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "behat/behat": "^3.4",
+        "infection/infection": "^0.8.1",
+        "phpstan/phpstan": "^0.8.5",
+        "phpunit/phpunit": "^7.0",
+        "squizlabs/php_codesniffer": "^3.0",
+        "techdeco/coding-standard": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TechDeCo\\ElasticApmAgent\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TechDeCo\\ElasticApmAgent\\Tests\\": "tests"
+        }
+    }
+}
