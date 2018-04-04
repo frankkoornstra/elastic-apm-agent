@@ -1,0 +1,6 @@
+parameters:
+    polluteCatchScopeWithTryAssignments: true
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Ignore Prophecy mock stuff
+        - '#Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy::#'
