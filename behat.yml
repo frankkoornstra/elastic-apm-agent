@@ -5,4 +5,9 @@ default:
 
   suites:
     acceptance:
-      contexts: []
+      services: "@test_container"
+      contexts:
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\Transformers: ~
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\TransactionContext: ~
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\AsyncRequestContext:
+            - "@client.async"
