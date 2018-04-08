@@ -24,6 +24,9 @@ services:
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9200']
+      interval: 5s
+      timeout: 100ms
+      retries: 10
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.2.3
@@ -33,8 +36,13 @@ services:
       - elasticsearch
 
   apm:
-    image: docker.elastic.co/apm/apm-server:6.2.3
-    volumes:
-      - ./docker/apm/apm-server.yml:/usr/share/apm-server/apm-server.yml
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-apm
     depends_on:
       - elasticsearch
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8200']
+      interval: 5s
+      timeout: 100ms
+      retries: 10
