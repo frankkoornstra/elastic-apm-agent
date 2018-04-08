@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Tests\Unit\Client;
 
-use DateTimeImmutable;
 use Exception;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -22,6 +21,7 @@ use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Message\Error as ErrorMessage;
 use TechDeCo\ElasticApmAgent\Message\Log;
 use TechDeCo\ElasticApmAgent\Message\Service;
+use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Message\Transaction as TransactionMessage;
 use TechDeCo\ElasticApmAgent\Message\VersionedName;
 use TechDeCo\ElasticApmAgent\Request\Error;
@@ -88,10 +88,10 @@ final class HttplugAsyncClientTest extends TestCase
 
         $agent             = new VersionedName('alloy', '1');
         $service           = new Service($agent, 'focus');
-        $message           = new TransactionMessage(12.5, Uuid::uuid4(), 'thunderjaw', new DateTimeImmutable(), 'beast');
+        $message           = new TransactionMessage(12.5, Uuid::uuid4(), 'thunderjaw', new Timestamp(), 'beast');
         $this->transaction = new Transaction($service, $message);
         $log               = new Log('roar');
-        $message           = ErrorMessage::fromLog($log, new DateTimeImmutable());
+        $message           = ErrorMessage::fromLog($log, new Timestamp());
         $this->error       = new Error($service, $message);
 
         $this->messageFactory->createRequest(Argument::any(), Argument::any(), Argument::any(), Argument::any())

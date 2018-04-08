@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Message;
 
-use DateTimeInterface;
 use JsonSerializable;
 use Ramsey\Uuid\UuidInterface;
 use TechDeCo\ElasticApmAgent\Serialization;
-use const DATE_RFC3339_EXTENDED;
 use function array_merge;
 
 final class Transaction implements JsonSerializable
@@ -38,7 +36,7 @@ final class Transaction implements JsonSerializable
     private $result;
 
     /**
-     * @var DateTimeInterface
+     * @var Timestamp
      */
     private $timestamp;
 
@@ -71,7 +69,7 @@ final class Transaction implements JsonSerializable
         float $duration,
         UuidInterface $id,
         string $name,
-        DateTimeInterface $timestamp,
+        Timestamp $timestamp,
         string $type
     ) {
         $this->duration  = $duration;
@@ -148,7 +146,7 @@ final class Transaction implements JsonSerializable
             'id' => $this->id->toString(),
             'name' => $this->name,
             'result' => $this->result,
-            'timestamp' => $this->timestamp->format(DATE_RFC3339_EXTENDED),
+            'timestamp' => $this->timestamp->jsonSerialize(),
             'spans' => Serialization::serialize(...$this->spanList),
             'type' => $this->type,
             'marks' => $this->markList,
