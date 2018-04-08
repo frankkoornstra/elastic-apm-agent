@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Tests\Unit\Message;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\Message\Context;
 use TechDeCo\ElasticApmAgent\Message\Span;
+use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Message\Transaction;
 
 final class TransactionTest extends TestCase
@@ -15,7 +15,7 @@ final class TransactionTest extends TestCase
     public function testAll(): void
     {
         $id      = Uuid::uuid4();
-        $date    = new DateTimeImmutable('2018-02-14T10:11:12.131+01:00');
+        $date    = new Timestamp('2018-02-14T10:11:12.131');
         $context = (new Context())->withTag('beast', 'thunderjaw');
         $span    = new Span(1.2, 'mysql', 0.0, 'database');
 
@@ -30,15 +30,13 @@ final class TransactionTest extends TestCase
 
         $expected = [
             'context' => [
-                'tags' => [
-                    'beast' => 'thunderjaw',
-                ],
+                'tags' => ['beast' => 'thunderjaw'],
             ],
             'duration' => 13.2,
             'id' => (string) $id,
             'name' => 'alloy',
             'result' => '204',
-            'timestamp' => '2018-02-14T10:11:12.131+01:00',
+            'timestamp' => '2018-02-14T10:11:12.131000Z',
             'spans' => [
                 [
                     'duration' => 1.2,
@@ -48,14 +46,10 @@ final class TransactionTest extends TestCase
                 ],
             ],
             'type' => 'zeta',
-            'marks' => [
-                'loaded' => 5.3,
-            ],
+            'marks' => ['loaded' => 5.3],
             'sampled' => true,
             'span_count' => [
-                'dropped' => [
-                    'total' => 5,
-                ],
+                'dropped' => ['total' => 5],
             ],
         ];
 
@@ -65,7 +59,7 @@ final class TransactionTest extends TestCase
     public function testNotSampled(): void
     {
         $id   = Uuid::uuid4();
-        $date = new DateTimeImmutable('2018-02-14T10:11:12.131+01:00');
+        $date = new Timestamp('2018-02-14T10:11:12.131');
 
         $actual = (new Transaction(13.2, $id, 'alloy', $date, 'zeta'))
             ->thatIsNotSampled()
@@ -77,7 +71,7 @@ final class TransactionTest extends TestCase
     public function testFiltersEmpty(): void
     {
         $id   = Uuid::uuid4();
-        $date = new DateTimeImmutable('2018-02-14T10:11:12.131+01:00');
+        $date = new Timestamp('2018-02-14T10:11:12.131');
 
         $actual = (new Transaction(13.2, $id, 'alloy', $date, 'zeta'))
             ->jsonSerialize();
@@ -86,7 +80,7 @@ final class TransactionTest extends TestCase
             'duration' => 13.2,
             'id' => (string) $id,
             'name' => 'alloy',
-            'timestamp' => '2018-02-14T10:11:12.131+01:00',
+            'timestamp' => '2018-02-14T10:11:12.131000Z',
             'type' => 'zeta',
         ];
 

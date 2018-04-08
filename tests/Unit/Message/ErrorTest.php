@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Tests\Unit\Message;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\Message\Context;
 use TechDeCo\ElasticApmAgent\Message\Error;
 use TechDeCo\ElasticApmAgent\Message\Exception;
 use TechDeCo\ElasticApmAgent\Message\Log;
+use TechDeCo\ElasticApmAgent\Message\Timestamp;
 
 final class ErrorTest extends TestCase
 {
     public function testAllByFromException(): void
     {
         $exception     = new Exception('blabla');
-        $date          = new DateTimeImmutable('2018-01-01T10:11:12.131+01:00');
+        $date          = new Timestamp('2018-01-01T10:11:12.131');
         $context       = (new Context())->withTag('name', 'alloy');
         $id            = Uuid::uuid4();
         $log           = new Log('bloo');
@@ -38,7 +38,7 @@ final class ErrorTest extends TestCase
             'exception' => ['message' => 'blabla'],
             'id' => $id->toString(),
             'log' => ['message' => 'bloo'],
-            'timestamp' => '2018-01-01T10:11:12.131+01:00',
+            'timestamp' => '2018-01-01T10:11:12.131000Z',
             'transaction' => $transactionId->toString(),
         ];
 
@@ -49,7 +49,7 @@ final class ErrorTest extends TestCase
     {
         $log       = new Log('bloo');
         $exception = new Exception('blabla');
-        $date      = new DateTimeImmutable('2018-01-01T10:11:12.131+01:00');
+        $date      = new Timestamp('2018-01-01T10:11:12.131');
 
         $actual = Error::fromLog($log, $date)
                        ->causedByException($exception)
@@ -58,7 +58,7 @@ final class ErrorTest extends TestCase
         $expected = [
             'exception' => ['message' => 'blabla'],
             'log' => ['message' => 'bloo'],
-            'timestamp' => '2018-01-01T10:11:12.131+01:00',
+            'timestamp' => '2018-01-01T10:11:12.131000Z',
         ];
 
         self::assertEquals($expected, $actual);
@@ -67,14 +67,14 @@ final class ErrorTest extends TestCase
     public function testFiltersEmpty(): void
     {
         $log  = new Log('bloo');
-        $date = new DateTimeImmutable('2018-01-01T10:11:12.131+01:00');
+        $date = new Timestamp('2018-01-01T10:11:12.131');
 
         $actual = Error::fromLog($log, $date)
                        ->jsonSerialize();
 
         $expected = [
             'log' => ['message' => 'bloo'],
-            'timestamp' => '2018-01-01T10:11:12.131+01:00',
+            'timestamp' => '2018-01-01T10:11:12.131000Z',
         ];
 
         self::assertEquals($expected, $actual);

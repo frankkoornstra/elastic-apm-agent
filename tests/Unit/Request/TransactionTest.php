@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Tests\Unit\Request;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\Message\Process;
 use TechDeCo\ElasticApmAgent\Message\Service;
 use TechDeCo\ElasticApmAgent\Message\System;
+use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Message\Transaction as TransactionMessage;
 use TechDeCo\ElasticApmAgent\Message\VersionedName;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
@@ -18,7 +18,7 @@ final class TransactionTest extends TestCase
     public function testAll(): void
     {
         $id      = Uuid::uuid4();
-        $date    = new DateTimeImmutable('2018-02-14T10:11:12.131+01:00');
+        $date    = new Timestamp('2018-02-14T10:11:12.131');
         $message = (new TransactionMessage(13.2, $id, 'alloy', $date, 'zeta'));
         $agent   = new VersionedName('thunderjaw', '1.0');
         $service = new Service($agent, 'rockbreaker');
@@ -34,22 +34,18 @@ final class TransactionTest extends TestCase
             'service' => [
                 'agent' => [
                     'name' => 'thunderjaw',
-                    'version' => '1.0'
+                    'version' => '1.0',
                 ],
-                'name' => 'rockbreaker'
+                'name' => 'rockbreaker',
             ],
-            'process' => [
-                'pid' => 213,
-            ],
-            'system' => [
-                'hostname' => 'hades',
-            ],
+            'process' => ['pid' => 213],
+            'system' => ['hostname' => 'hades'],
             'transactions' => [
                 [
                     'duration' => 13.2,
                     'id' => (string) $id,
                     'name' => 'alloy',
-                    'timestamp' => '2018-02-14T10:11:12.131+01:00',
+                    'timestamp' => '2018-02-14T10:11:12.131000Z',
                     'type' => 'zeta',
                 ],
             ],
@@ -61,7 +57,7 @@ final class TransactionTest extends TestCase
     public function testFiltersEmpty(): void
     {
         $id      = Uuid::uuid4();
-        $date    = new DateTimeImmutable('2018-02-14T10:11:12.131+01:00');
+        $date    = new Timestamp('2018-02-14T10:11:12.131');
         $message = (new TransactionMessage(13.2, $id, 'alloy', $date, 'zeta'));
         $agent   = new VersionedName('thunderjaw', '1.0');
         $service = new Service($agent, 'rockbreaker');
@@ -73,16 +69,16 @@ final class TransactionTest extends TestCase
             'service' => [
                 'agent' => [
                     'name' => 'thunderjaw',
-                    'version' => '1.0'
+                    'version' => '1.0',
                 ],
-                'name' => 'rockbreaker'
+                'name' => 'rockbreaker',
             ],
             'transactions' => [
                 [
                     'duration' => 13.2,
                     'id' => (string) $id,
                     'name' => 'alloy',
-                    'timestamp' => '2018-02-14T10:11:12.131+01:00',
+                    'timestamp' => '2018-02-14T10:11:12.131000Z',
                     'type' => 'zeta',
                 ],
             ],

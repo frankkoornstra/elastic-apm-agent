@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Message;
 
-use DateTimeInterface;
 use JsonSerializable;
 use Ramsey\Uuid\UuidInterface;
 use TechDeCo\ElasticApmAgent\Serialization;
-use const DATE_RFC3339_EXTENDED;
 
 final class Error implements JsonSerializable
 {
@@ -37,7 +35,7 @@ final class Error implements JsonSerializable
     private $log;
 
     /**
-     * @var DateTimeInterface
+     * @var Timestamp
      */
     private $timestamp;
 
@@ -50,7 +48,7 @@ final class Error implements JsonSerializable
     {
     }
 
-    public static function fromException(Exception $exception, DateTimeInterface $timestamp): self
+    public static function fromException(Exception $exception, Timestamp $timestamp): self
     {
         $me            = new Error();
         $me->exception = $exception;
@@ -59,7 +57,7 @@ final class Error implements JsonSerializable
         return $me;
     }
 
-    public static function fromLog(Log $log, DateTimeInterface $timestamp): self
+    public static function fromLog(Log $log, Timestamp $timestamp): self
     {
         $me            = new Error();
         $me->log       = $log;
@@ -127,7 +125,7 @@ final class Error implements JsonSerializable
             'exception' => $this->exception ? $this->exception->jsonSerialize() : null,
             'id' => $this->id ? $this->id->toString() : null,
             'log' => $this->log ? $this->log->jsonSerialize() : null,
-            'timestamp' => $this->timestamp ? $this->timestamp->format(DATE_RFC3339_EXTENDED) : null,
+            'timestamp' => $this->timestamp ? $this->timestamp->jsonSerialize() : null,
             'transaction' => $this->transactionId ? $this->transactionId->toString() : null,
         ]);
     }
