@@ -4,3 +4,5 @@ parameters:
     ignoreErrors:
         # Ignore Prophecy mock stuff
         - '#Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy::#'
+        # Behat interface mismatch that does work
+        - '#Call to an undefined method Behat\\Testwork\\Environment\\Environment::getContext()#'
