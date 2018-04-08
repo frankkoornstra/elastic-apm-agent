@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c0e8fe290d117de91dd9535f9b826da",
+    "content-hash": "ea0d5cf56fa9eca6c0a935d1d801bc91",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1336,6 +1336,115 @@
                 "versions"
             ],
             "time": "2018-01-21T13:54:22+00:00"
+        },
+        {
+            "name": "lcobucci/behat-di-builder-extension",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lcobucci/behat-di-builder-extension.git",
+                "reference": "53abdf90baefe261c0d21fe9efd012b4edfe1f36"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lcobucci/behat-di-builder-extension/zipball/53abdf90baefe261c0d21fe9efd012b4edfe1f36",
+                "reference": "53abdf90baefe261c0d21fe9efd012b4edfe1f36",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "^3.4",
+                "lcobucci/di-builder": "^5.3",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.9",
+                "phpunit/phpunit": "^6.5",
+                "squizlabs/php_codesniffer": "^3.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lcobucci\\DependencyInjection\\Behat\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luís Cobucci",
+                    "email": "lcobucci@gmail.com"
+                }
+            ],
+            "description": "A behat extension that allows injecting services from a container created with lcobucci/di-builder in contexts",
+            "time": "2017-12-01T15:50:50+00:00"
+        },
+        {
+            "name": "lcobucci/di-builder",
+            "version": "5.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lcobucci/di-builder.git",
+                "reference": "da28b8aa76534519c50a4d5ceff6ba323373ebef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lcobucci/di-builder/zipball/da28b8aa76534519c50a4d5ceff6ba323373ebef",
+                "reference": "da28b8aa76534519c50a4d5ceff6ba323373ebef",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "symfony/config": "^3.3|^4.0",
+                "symfony/dependency-injection": "^3.3|^4.0",
+                "symfony/expression-language": "^3.3|^4.0"
+            },
+            "require-dev": {
+                "infection/infection": "^0.7",
+                "mikey179/vfsstream": "^1.6",
+                "phpstan/phpstan": "^0.9",
+                "phpstan/phpstan-phpunit": "^0.9",
+                "phpunit/phpunit": "^6.5",
+                "squizlabs/php_codesniffer": "^3.1",
+                "symfony/proxy-manager-bridge": "^3.3|^4.0",
+                "symfony/yaml": "^3.3|^4.0"
+            },
+            "suggest": {
+                "symfony/proxy-manager-bridge": "Allows the creation of lazy services"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lcobucci\\DependencyInjection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Luís Cobucci",
+                    "email": "lcobucci@gmail.com"
+                }
+            ],
+            "description": "Dependency Injection Builder for PHP 7.1+ applications",
+            "homepage": "https://github.com/lcobucci/di-builder",
+            "keywords": [
+                "dependency-injection"
+            ],
+            "time": "2018-01-12T08:59:08+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2874,6 +2983,52 @@
             "time": "2018-01-21T07:42:36+00:00"
         },
         {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "time": "2016-08-06T20:24:11+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -2968,6 +3123,54 @@
                 "psr-3"
             ],
             "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "time": "2017-10-23T01:57:42+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -3624,6 +3827,75 @@
             "time": "2018-02-20T21:35:23+00:00"
         },
         {
+            "name": "symfony/cache",
+            "version": "v4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/cache.git",
+                "reference": "681c245e629409a2f1ded6bf783e833d291d8af2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/681c245e629409a2f1ded6bf783e833d291d8af2",
+                "reference": "681c245e629409a2f1ded6bf783e833d291d8af2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "psr/cache": "~1.0",
+                "psr/log": "~1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "conflict": {
+                "symfony/var-dumper": "<3.4"
+            },
+            "provide": {
+                "psr/cache-implementation": "1.0",
+                "psr/simple-cache-implementation": "1.0"
+            },
+            "require-dev": {
+                "cache/integration-tests": "dev-master",
+                "doctrine/cache": "~1.6",
+                "doctrine/dbal": "~2.4",
+                "predis/predis": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Cache\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Cache component with PSR-6, PSR-16, and tags",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "caching",
+                "psr6"
+            ],
+            "time": "2018-04-02T14:35:51+00:00"
+        },
+        {
             "name": "symfony/class-loader",
             "version": "v3.4.7",
             "source": {
@@ -3999,6 +4271,56 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
             "time": "2018-02-14T14:11:10+00:00"
+        },
+        {
+            "name": "symfony/expression-language",
+            "version": "v4.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/expression-language.git",
+                "reference": "b826c255f22333eccd3365734d2c4e150c284843"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/expression-language/zipball/b826c255f22333eccd3365734d2c4e150c284843",
+                "reference": "b826c255f22333eccd3365734d2c4e150c284843",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "symfony/cache": "~3.4|~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\ExpressionLanguage\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony ExpressionLanguage Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-01-03T07:38:00+00:00"
         },
         {
             "name": "symfony/filesystem",

@@ -31,6 +31,8 @@
     "require-dev": {
         "behat/behat": "^3.4",
         "infection/infection": "^0.8.1",
+        "lcobucci/behat-di-builder-extension": "^0.1.1",
+        "lcobucci/di-builder": "^5.3",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.6",
         "phpstan/phpstan": "^0.8.5",

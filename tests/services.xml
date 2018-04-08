@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services ../vendor/symfony/dependency-injection/Loader/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="client_configuration" class="TechDeCo\ElasticApmAgent\ClientConfiguration">
+            <argument>%env(APM_URL)%</argument>
+        </service>
+
+        <service id="client.async" class="TechDeCo\ElasticApmAgent\Client\HttplugAsyncClient">
+            <argument type="service" id="client_configuration"/>
+            <argument type="service" id="http_client"/>
+            <argument type="service" id="http_message_factory"/>
+        </service>
+
+        <service id="http_client" class="Http\Adapter\Guzzle6\Client"/>
+        <service id="http_message_factory" class="Http\Message\MessageFactory\GuzzleMessageFactory"/>
+    </services>
+</container>

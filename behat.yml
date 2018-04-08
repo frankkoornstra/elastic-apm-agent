@@ -1,4 +1,8 @@
 default:
+  extensions:
+      Lcobucci\DependencyInjection\Behat\BuilderExtension:
+        container_builder: tests/container_builder.php
+
   suites:
     acceptance:
       contexts: []
