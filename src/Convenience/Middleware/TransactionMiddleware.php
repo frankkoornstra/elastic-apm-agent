@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Middleware;
+namespace TechDeCo\ElasticApmAgent\Convenience\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
+use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
