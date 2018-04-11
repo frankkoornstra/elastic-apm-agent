@@ -12,7 +12,7 @@ This readme functions both as documentation and as a means to communicate the go
 - [x] Create messages and requests
 - [x] Create interface for synchronous and asynchronous clients
 - [x] Implement asynchronous client
-- [ ] Create PSR-15 middleware
+- [x] Create PSR-15 middleware
 - [ ] Create a PSR-6 cache wrapper
 - [ ] Create a PSR-18 HTTP client wrapper
 - [ ] Create a PSR-18 HTTP request factory wrapper
@@ -67,11 +67,21 @@ $error = $error->onSystem(...)->inProcess(...); // Got it!
 
 ### Middleware
 
-**DRAFT, IN PROGRESS**
+To measure the response time and report errors (by catching exceptions), you can hook up the [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant middleware to your application.
 
-To measure the response time and report errors (by catching exceptions), hook up the [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant middleware to your application.
+#### Transaction
 
-It will inject the transaction in the request under the parameter name `apm-transaction` so you can add information to it later. If you do, be aware that **it is immutable** so you need to replace it in the request.
+The `TransactionMiddleware` will inject an `OpenTransaction` into the forwarded request under the attribute name `apm-transaction` (but you better reference to it using the constant `TransactionMiddleware::TRANSACTION_ATTRIBUTE`). 
+
+You can add `Span`s and mark events to the `OpenTransaction` and when you give a response, the middleware will pick them up and send them along with the transaction to the APM server. This is one of the view objects that _is mutable_ so you don't have to replace the request attribute every time you change something.
+
+#### Error
+
+If you want to catch and report `Throwable`s to APM, also include the `ErrorMiddleware` in your middleware stack. It will catch any `Throwable` and try to make as much sense of it as possible. To give the error even more context, you can on inject `Context` object on instantiation of the middleware. It will use that as the base for building context.
+
+#### Combination
+
+Obviously the two middleware can be combined. The recommended way to do this is to wrap the `ErrorMiddlware` _inside_ the `TransactionMiddleware`. That way the error will correlated to the transaction and the transaction duration will be as realistic as possible, including the time it takes to report the error to the APM server for example.
 
 ### Caching
 
