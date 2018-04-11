@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Tests\Unit\Middleware;
+namespace TechDeCo\ElasticApmAgent\Tests\Unit\Convenience\Middleware;
 
 use Exception;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
+use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Span;
-use TechDeCo\ElasticApmAgent\Middleware\OpenTransaction;
-use TechDeCo\ElasticApmAgent\Middleware\TransactionMiddleware;
 use function usleep;
 
 final class DummyHandler implements RequestHandlerInterface

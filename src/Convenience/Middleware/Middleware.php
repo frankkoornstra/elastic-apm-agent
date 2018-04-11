@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Middleware;
+namespace TechDeCo\ElasticApmAgent\Convenience\Middleware;
 
 use Psr\Http\Server\MiddlewareInterface;
 use TechDeCo\ElasticApmAgent\AsyncClient;

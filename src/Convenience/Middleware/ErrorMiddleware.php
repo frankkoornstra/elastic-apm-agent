@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Middleware;
+namespace TechDeCo\ElasticApmAgent\Convenience\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Message\Context;
 use TechDeCo\ElasticApmAgent\Message\Error as ErrorMessage;
@@ -72,7 +73,7 @@ final class ErrorMiddleware extends Middleware
                                ->withId(Uuid::uuid4())
                                ->inContext($this->createContext($request));
 
-        /** @var ?OpenTransaction $transaction */
+        /** @var OpenTransaction|null $transaction */
         $transaction = $request->getAttribute(TransactionMiddleware::TRANSACTION_ATTRIBUTE);
         if ($transaction !== null) {
             $message = $message->correlatedToTransactionId($transaction->getId());
