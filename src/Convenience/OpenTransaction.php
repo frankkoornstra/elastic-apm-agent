@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Middleware;
+namespace TechDeCo\ElasticApmAgent\Convenience;
 
 use Ramsey\Uuid\UuidInterface;
 use TechDeCo\ElasticApmAgent\Message\Span;

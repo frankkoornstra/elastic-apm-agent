@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Tests\Unit\Middleware;
+namespace TechDeCo\ElasticApmAgent\Tests\Unit\Convenience\Middleware;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\Assert;
@@ -13,12 +13,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
+use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Process;
 use TechDeCo\ElasticApmAgent\Message\Service;
 use TechDeCo\ElasticApmAgent\Message\System;
 use TechDeCo\ElasticApmAgent\Message\VersionedName;
-use TechDeCo\ElasticApmAgent\Middleware\OpenTransaction;
-use TechDeCo\ElasticApmAgent\Middleware\TransactionMiddleware;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
 
 final class TransactionMiddlewareTest extends TestCase
