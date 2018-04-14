@@ -8,10 +8,10 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransactionEnricher;
+use TechDeCo\ElasticApmAgent\Convenience\Util\Stopwatch;
 use TechDeCo\ElasticApmAgent\Message\Span;
 use Traversable;
 use function implode;
-use function microtime;
 
 final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransactionEnricher
 {
@@ -47,16 +47,6 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
         $this->transaction = $transaction;
     }
 
-    private function startTimer(): float
-    {
-        return microtime(true) * 1000;
-    }
-
-    private function stopTimer(float $start): float
-    {
-        return (microtime(true) * 1000) - $start;
-    }
-
     /**
      * @param string $key
      * @throws InvalidArgumentException
@@ -64,12 +54,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function getItem($key): CacheItemInterface
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->getItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 $key,
                 $this->transaction->getStartOffset(),
                 $this->type . '.get-item'
@@ -85,12 +75,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function getItems(array $keys = [])
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->getItems($keys);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 implode(',', $keys),
                 $this->transaction->getStartOffset(),
                 $this->type . '.get-items'
@@ -105,12 +95,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function hasItem($key): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->hasItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 $key,
                 $this->transaction->getStartOffset(),
                 $this->type . '.has-item'
@@ -121,12 +111,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function clear(): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->clear();
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 '',
                 $this->transaction->getStartOffset(),
                 $this->type . '.clear'
@@ -141,12 +131,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function deleteItem($key): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->deleteItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 $key,
                 $this->transaction->getStartOffset(),
                 $this->type . '.delete-item'
@@ -161,12 +151,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function deleteItems(array $keys): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->deleteItems($keys);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 implode(',', $keys),
                 $this->transaction->getStartOffset(),
                 $this->type . '.delete-items'
@@ -177,12 +167,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function save(CacheItemInterface $item): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->save($item);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 $item->getKey(),
                 $this->transaction->getStartOffset(),
                 $this->type . '.save'
@@ -193,12 +183,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function saveDeferred(CacheItemInterface $item): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->saveDeferred($item);
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 $item->getKey(),
                 $this->transaction->getStartOffset(),
                 $this->type . '.save-deferred'
@@ -209,12 +199,12 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     public function commit(): ?bool
     {
         try {
-            $start = $this->startTimer();
+            $start = Stopwatch::start();
 
             return $this->pool->commit();
         } finally {
             $this->transaction->addSpan(new Span(
-                $this->stopTimer($start),
+                Stopwatch::stop($start),
                 'commit',
                 $this->transaction->getStartOffset(),
                 $this->type . '.commit'
