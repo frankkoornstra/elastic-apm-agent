@@ -13,7 +13,7 @@ This readme functions both as documentation and as a means to communicate the go
 - [x] Create interface for synchronous and asynchronous clients
 - [x] Implement asynchronous client
 - [x] Create PSR-15 middleware
-- [ ] Create a PSR-6 cache wrapper
+- [x] Create a PSR-6 cache wrapper
 - [ ] Create a PSR-18 HTTP client wrapper
 - [ ] Create a PSR-18 HTTP request factory wrapper
 - [ ] Create a PHP-HTTP plugin to [automatically wrap HTTP clients](http://docs.php-http.org/en/latest/components/client-common.html)
@@ -46,7 +46,7 @@ $client         = new HttplugAsyncClient($config, $httpClient, $requestFactory);
 
 ## Usage
 
-Elastic did a really great job integrating seamlessly with lots of languages and frameworks. This library hopes to provide that same service to the PHP community. You can either choose to use the building blocks provided by the library in a do-it-yourself solution or use the higher level components, like the middleware.
+Elastic did a really great job integrating seamlessly with lots of languages and frameworks. This library hopes to provide that same service to the PHP community. You can either choose to use the building blocks provided by the library in a do-it-yourself solution or use the higher level convenience components, like the middleware.
 
 ### DIY
 
@@ -85,9 +85,9 @@ Obviously the two middleware can be combined. The recommended way to do this is 
 
 ### Caching
 
-**DRAFT, IN PROGRESS**
-
 To monitor your caching calls, wrap your caching implementing library in the [PSR-6](https://www.php-fig.org/psr/psr-6/) compliant caching layer. It will create a [span](https://www.elastic.co/guide/en/apm/server/current/spans.html) for each call.
+
+Before calling any methods of the `CacheItemPoolInterface`, make sure you **inject an `OpenTransaction`** via the setter of the `OpenTransactionEnricher` interface. You can get the `OpenTransaction` either from the request if you use the middleware in this library, or you can create your own and convert it later on to a `Transaction` that you can send to the APM server via the `Client`.
 
 ### HTTP client
 
