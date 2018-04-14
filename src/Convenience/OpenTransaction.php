@@ -93,10 +93,10 @@ final class OpenTransaction
     }
 
     /**
-     * @return float The offset in seconds with microsecond precision
+     * @return float The offset in microseconds with microsecond precision
      */
     public function getStartOffset(): float
     {
-        return microtime(true) - $this->startOfTransaction;
+        return (microtime(true) - $this->startOfTransaction) * 1000;
     }
 }
