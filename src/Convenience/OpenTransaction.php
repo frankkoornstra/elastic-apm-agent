@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace TechDeCo\ElasticApmAgent\Convenience;
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use TechDeCo\ElasticApmAgent\Message\Context;
 use TechDeCo\ElasticApmAgent\Message\Span;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Message\Transaction;
@@ -46,17 +48,24 @@ final class OpenTransaction
      */
     private $markList = [];
 
+    /**
+     * @var UuidInterface
+     */
+    private $correlationId;
+
     public function __construct(
         UuidInterface $id,
         string $name,
         Timestamp $timestamp,
-        string $type
+        string $type,
+        ?UuidInterface $correlationId = null
     ) {
         $this->id                 = $id;
         $this->name               = $name;
         $this->timestamp          = $timestamp;
         $this->type               = $type;
         $this->startOfTransaction = microtime(true);
+        $this->correlationId      = $correlationId ?? Uuid::uuid4();
     }
 
     public function getId(): UuidInterface
@@ -89,6 +98,10 @@ final class OpenTransaction
             $transaction = $transaction->marking($event, $timestamp);
         }
 
+        $transaction = $transaction->inContext(
+            (new Context())->withTag(ContextTags::CORRELATION_ID, $this->correlationId->toString())
+        );
+
         return $transaction;
     }
 
@@ -98,5 +111,10 @@ final class OpenTransaction
     public function getStartOffset(): float
     {
         return (microtime(true) - $this->startOfTransaction) * 1000;
+    }
+
+    public function getCorrelationId(): UuidInterface
+    {
+        return $this->correlationId;
     }
 }
