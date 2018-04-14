@@ -14,8 +14,7 @@ This readme functions both as documentation and as a means to communicate the go
 - [x] Implement asynchronous client
 - [x] Create PSR-15 middleware
 - [x] Create a PSR-6 cache wrapper
-- [ ] Create a PSR-18 HTTP client wrapper
-- [ ] Create a PSR-18 HTTP request factory wrapper
+- [x] Create a HTTPlug HTTP client wrapper
 - [ ] Create a PHP-HTTP plugin to [automatically wrap HTTP clients](http://docs.php-http.org/en/latest/components/client-common.html)
 
 ## Installation
@@ -89,12 +88,8 @@ To monitor your caching calls, wrap your caching implementing library in the [PS
 
 Before calling any methods of the `CacheItemPoolInterface`, make sure you **inject an `OpenTransaction`** via the setter of the `OpenTransactionEnricher` interface. You can get the `OpenTransaction` either from the request if you use the middleware in this library, or you can create your own and convert it later on to a `Transaction` that you can send to the APM server via the `Client`.
 
-### HTTP client
+### HTTPlug client
 
-**DRAFT, IN PROGRESS**
+To monitor your calls to external HTTP services, wrap your [HTTPlug Client](http://docs.php-http.org/en/latest/httplug/introduction.html) in the `HttpClientWrapper`. It will create a [span](https://www.elastic.co/guide/en/apm/server/current/spans.html) for each http request that you send.
 
-To monitor your calls to external HTTP services, wrap your HTTP library in the [PSR-18](https://github.com/php-fig/fig-standards/tree/master/proposed/http-client/) (although the PSR is still in DRAFT) compliant library. It will create a [span](https://www.elastic.co/guide/en/apm/server/current/spans.html) for each call that you make.
-
-If you also want to able to track the incoming http request over several services, make sure you create the request through the [PSR-19](https://github.com/php-fig/fig-standards/tree/master/proposed/http-factory/) (also still in DRAFT) request factory that can wrap your own implementation. The library will add the necessary headers that the called http services can pick up to correlate the request.
-
-If you use the PHP-HTTP [Discovery](http://docs.php-http.org/en/latest/discovery.html) functionality to locate your HTTP client and request factory before injection into your own components, the library will automatically wrap them for your convenience.
+The wrapper will add the [`X-Correlation-ID`](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Common_non-standard_request_fields) header to the request before it forwards it. The header will contain a UUID that should be consistent and it gives you the opportunity to correlate cascading http requests throughout your infrastructure. The middleware in this library will pick up the header and will add the correlation id to the tags of the context of the transaction. If no correlation id can be found in the header, a new one will be created.
