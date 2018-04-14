@@ -15,4 +15,8 @@
     <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment">
         <exclude-pattern>/tests/Acceptance/*</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
+        <exclude-pattern>src/Convenience/Cache/CacheItemPoolWrapper.php</exclude-pattern>
+        <exclude-pattern>tests/Unit/Convenience/Cache/DummyCacheItemPool.php</exclude-pattern>
+    </rule>
 </ruleset>
