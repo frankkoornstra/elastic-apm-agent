@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Convenience\HttplugHttpClient\HttpClientWrapper;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Process;
@@ -196,5 +197,29 @@ final class TransactionMiddlewareTest extends TestCase
                 },
             ],
         ];
+    }
+
+    public function testPicksUpCorrectCorrelationIdFromHeader(): void
+    {
+        $id            = Uuid::uuid4();
+        $ensuresHeader = function (Transaction $transaction) use ($id): bool {
+            $data = $transaction->jsonSerialize();
+
+            return $data['transactions'][0]['context']['tags']['correlation-id'] === $id->toString();
+        };
+        $this->client->sendTransactionAsync(Argument::that($ensuresHeader))
+                     ->shouldBeCalled();
+        $this->client->waitForResponses()
+                     ->shouldBeCalled();
+
+        $request = $this->request->withAddedHeader(HttpClientWrapper::CORRELATION_ID_HEADER, $id->toString());
+        $this->middleware->process($request, $this->dummy);
+    }
+
+    public function testIgnoresIncorrectCorrelationIdFromHeader(): void
+    {
+        $request = $this->request->withAddedHeader(HttpClientWrapper::CORRELATION_ID_HEADER, 'no uuid');
+
+        self::assertInstanceOf(ResponseInterface::class, $this->middleware->process($request, $this->dummy));
     }
 }
