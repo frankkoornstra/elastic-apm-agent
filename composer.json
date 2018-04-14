@@ -26,11 +26,13 @@
         "php-http/httplug": "^1.1",
         "php-http/message-factory": "^1.0",
         "php-http/message-factory-implementation": "^1.0",
+        "psr/cache": "^1.0",
         "psr/http-server-middleware": "^1.0",
         "ramsey/uuid": "^3.7"
     },
     "require-dev": {
         "behat/behat": "^3.4",
+        "cache/array-adapter": "^1.0",
         "infection/infection": "^0.8.1",
         "lcobucci/behat-di-builder-extension": "^0.1.1",
         "lcobucci/di-builder": "^5.3",
