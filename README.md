@@ -1,6 +1,6 @@
 # Elastic APM agent for PHP
 
-Release 6.2 of the Elastic stack saw to the the dawn of [Application Performance Management](https://www.elastic.co/guide/en/apm/server/current/overview.html). APM agents in several languages were released with it but _somehow_ PHP was not amongst them ¯\_(ツ)_/¯ This library adds that APM agent so we can happily ship our application performance measurements to the Elastic APM Server.
+Release 6.2 of the Elastic stack saw to the the dawn of [Application Performance Monitoring](https://www.elastic.co/guide/en/apm/server/current/overview.html). APM agents in several languages were released with it but _somehow_ PHP was not amongst them ¯\_(ツ)_/¯ This library adds that APM agent so we can happily ship our application performance measurements to the Elastic APM Server.
 
 **ATTENTION: Work in progress**
 
