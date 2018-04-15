@@ -13,3 +13,4 @@ default:
             - "@client.async"
         - TechDeCo\ElasticApmAgent\Tests\Acceptance\ConvenienceContext:
             - "@cache.wrapper"
+            - "@http.wrapper"

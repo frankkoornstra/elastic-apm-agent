@@ -8,3 +8,9 @@ Feature: Enrich open transaction
       And I get item "behemoth" from cache
      When I close the open transaction
      Then the closed transaction has a cache span for getting item "behemoth"
+
+  Scenario: add span for http requests
+    Given a default open transaction
+      And I send an http request for "http://gaia.prime"
+     When I close the open transaction
+     Then the closed transaction has an http request span for "http://gaia.prime"
