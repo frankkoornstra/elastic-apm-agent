@@ -13,6 +13,7 @@ use Ramsey\Uuid\Uuid;
 use TechDeCo\ElasticApmAgent\Convenience\Cache\CacheItemPoolWrapper;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
+use TechDeCo\ElasticApmAgent\Tests\Dummy\DummyCacheItemPool;
 
 final class CacheItemPoolWrapperTest extends TestCase
 {

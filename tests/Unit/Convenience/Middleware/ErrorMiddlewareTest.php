@@ -22,6 +22,7 @@ use TechDeCo\ElasticApmAgent\Message\System;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Message\VersionedName;
 use TechDeCo\ElasticApmAgent\Request\Error;
+use TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler;
 use function strtoupper;
 
 final class ErrorMiddlewareTest extends TestCase

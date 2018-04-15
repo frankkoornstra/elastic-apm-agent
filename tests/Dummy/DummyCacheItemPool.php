@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Tests\Unit\Convenience\Cache;
+namespace TechDeCo\ElasticApmAgent\Tests\Dummy;
 
 use Cache\Adapter\Common\Exception\InvalidArgumentException as InvalidArgumentExceptionImpl;
 use Psr\Cache\CacheItemInterface;

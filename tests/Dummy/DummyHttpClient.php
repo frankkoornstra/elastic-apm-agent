@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Tests\Unit\Convenience\HttplugHttpClient;
+namespace TechDeCo\ElasticApmAgent\Tests\Dummy;
 
 use GuzzleHttp\Psr7\Response;
 use Http\Client\Exception;
@@ -11,7 +11,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use function usleep;
 
-final class HttpClientDummy implements HttpClient
+final class DummyHttpClient implements HttpClient
 {
     /**
      * @var int

@@ -21,6 +21,7 @@ use TechDeCo\ElasticApmAgent\Message\Service;
 use TechDeCo\ElasticApmAgent\Message\System;
 use TechDeCo\ElasticApmAgent\Message\VersionedName;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
+use TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler;
 
 final class TransactionMiddlewareTest extends TestCase
 {
