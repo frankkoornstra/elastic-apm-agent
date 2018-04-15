@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TechDeCo\ElasticApmAgent\Tests\Unit\Convenience\Middleware;
+namespace TechDeCo\ElasticApmAgent\Tests\Dummy;
 
 use Exception;
 use GuzzleHttp\Psr7\Response;

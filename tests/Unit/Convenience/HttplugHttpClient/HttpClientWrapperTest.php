@@ -14,6 +14,7 @@ use Ramsey\Uuid\UuidInterface;
 use TechDeCo\ElasticApmAgent\Convenience\HttplugHttpClient\HttpClientWrapper;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
+use TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHttpClient;
 
 final class HttpClientWrapperTest extends TestCase
 {
@@ -28,7 +29,7 @@ final class HttpClientWrapperTest extends TestCase
     private $transaction;
 
     /**
-     * @var HttpClientDummy
+     * @var DummyHttpClient
      */
     private $client;
 
@@ -55,7 +56,7 @@ final class HttpClientWrapperTest extends TestCase
             'request',
             $this->correlationId
         );
-        $this->client        = new HttpClientDummy(5);
+        $this->client        = new DummyHttpClient(5);
         $this->request       = new Request('GET', 'http://foo.bar');
         $this->wrapper       = new HttpClientWrapper($this->client);
         $this->wrapper->setOpenTransaction($this->transaction);
@@ -84,7 +85,7 @@ final class HttpClientWrapperTest extends TestCase
         $data = $this->transaction->toTransaction()->jsonSerialize();
         self::assertEmpty($data['spans']);
 
-        $wrapper = new HttpClientWrapper(new HttpClientDummy(0, true));
+        $wrapper = new HttpClientWrapper(new DummyHttpClient(0, true));
         $wrapper->setOpenTransaction($this->transaction);
         $wrapper->sendRequest($this->request);
 
