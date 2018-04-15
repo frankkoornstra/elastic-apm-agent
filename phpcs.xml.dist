@@ -19,4 +19,7 @@
         <exclude-pattern>src/Convenience/Cache/CacheItemPoolWrapper.php</exclude-pattern>
         <exclude-pattern>tests/Dummy/DummyCacheItemPool.php</exclude-pattern>
     </rule>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement.DetectedCatch">
+        <exclude-pattern>tests/Acceptance</exclude-pattern>
+    </rule>
 </ruleset>

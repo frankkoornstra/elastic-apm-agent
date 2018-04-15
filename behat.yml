@@ -11,3 +11,5 @@ default:
         - TechDeCo\ElasticApmAgent\Tests\Acceptance\TransactionContext: ~
         - TechDeCo\ElasticApmAgent\Tests\Acceptance\AsyncRequestContext:
             - "@client.async"
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\ConvenienceContext:
+            - "@cache.wrapper"

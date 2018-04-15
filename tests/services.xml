@@ -15,5 +15,19 @@
 
         <service id="http_client" class="Http\Adapter\Guzzle6\Client"/>
         <service id="http_message_factory" class="Http\Message\MessageFactory\GuzzleMessageFactory"/>
+
+        <service id="cache.wrapper" class="TechDeCo\ElasticApmAgent\Convenience\Cache\CacheItemPoolWrapper">
+            <argument type="service" id="cache.dummy_pool"/>
+            <argument>dummy</argument>
+        </service>
+
+        <service id="cache.dummy_pool" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyCacheItemPool">
+            <argument type="service" id="cache.dummy_item"/>
+            <argument>0</argument>
+        </service>
+
+        <service id="cache.dummy_item" class="Cache\Adapter\Common\CacheItem">
+            <argument>key</argument>
+        </service>
     </services>
 </container>
