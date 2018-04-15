@@ -29,5 +29,13 @@
         <service id="cache.dummy_item" class="Cache\Adapter\Common\CacheItem">
             <argument>key</argument>
         </service>
+
+        <service id="http.wrapper" class="TechDeCo\ElasticApmAgent\Convenience\HttplugHttpClient\HttpClientWrapper">
+            <argument type="service" id="http.dummy"/>
+        </service>
+
+        <service id="http.dummy" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHttpClient">
+            <argument>0</argument>
+        </service>
     </services>
 </container>
