@@ -52,8 +52,10 @@ final class DummyHandler implements RequestHandlerInterface
 
         /** @var OpenTransaction $transaction */
         $transaction = $request->getAttribute(TransactionMiddleware::TRANSACTION_ATTRIBUTE);
-        $transaction->addMark(self::MARK_GROUP, self::MARK_NAME, self::MARK_VALUE);
-        $transaction->addSpan(new Span(4.5, self::SPAN_NAME, 0.0, 'db'));
+        if ($transaction !== null) {
+            $transaction->addMark(self::MARK_GROUP, self::MARK_NAME, self::MARK_VALUE);
+            $transaction->addSpan(new Span(4.5, self::SPAN_NAME, 0.0, 'db'));
+        }
 
         if ($this->throwsException) {
             throw new Exception(self::EXCEPTION_MESSAGE, self::EXCEPTION_CODE);

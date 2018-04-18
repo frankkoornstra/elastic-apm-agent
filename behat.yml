@@ -16,4 +16,5 @@ default:
             - "@http.wrapper"
         - TechDeCo\ElasticApmAgent\Tests\Acceptance\MiddlewareContext:
             - "@client.async"
-            - "@middleware.dummy_handler"
+            - "@middleware.dummy_normal_handler"
+            - "@middleware.dummy_exception_handler"

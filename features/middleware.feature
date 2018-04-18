@@ -7,3 +7,8 @@ Feature: Middleware
     Given I add the transaction middleware to my stack
      When I send the default server request
      Then the transaction sent by middleware is accepted
+
+  Scenario: sent errors when exceptions occur
+    Given I add the error middleware to my stack
+     When I send a server request that throws an exception
+     Then the error sent by the middleware is accepted
