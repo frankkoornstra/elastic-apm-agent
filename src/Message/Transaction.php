@@ -103,10 +103,14 @@ final class Transaction implements JsonSerializable
         return $me;
     }
 
-    public function marking(string $event, float $timestamp): self
+    public function marking(string $group, string $event, float $timestamp): self
     {
-        $me                   = clone $this;
-        $me->markList[$event] = $timestamp;
+        $me = clone $this;
+
+        if (! isset($me->markList[$group])) {
+            $me->markList[$group] = [];
+        }
+        $me->markList[$group][$event] = $timestamp;
 
         return $me;
     }

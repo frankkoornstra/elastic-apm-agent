@@ -23,7 +23,7 @@ final class TransactionTest extends TestCase
             ->inContext($context)
             ->resultingIn('204')
             ->withSpan($span)
-            ->marking('loaded', 5.3)
+            ->marking('page', 'loaded', 5.3)
             ->thatIsSampled()
             ->withTotalDroppedSpans(5)
             ->jsonSerialize();
@@ -46,7 +46,9 @@ final class TransactionTest extends TestCase
                 ],
             ],
             'type' => 'zeta',
-            'marks' => ['loaded' => 5.3],
+            'marks' => [
+                'page' => ['loaded' => 5.3],
+            ],
             'sampled' => true,
             'span_count' => [
                 'dropped' => ['total' => 5],

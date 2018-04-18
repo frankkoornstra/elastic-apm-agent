@@ -103,11 +103,11 @@ final class OpenTransactionTest extends TestCase
 
     public function testMarkInTransaction(): void
     {
-        $this->transaction->addMark('spear', 15.0);
+        $this->transaction->addMark('attack', 'spear', 15.0);
 
         self::assertSame(
             15.0,
-            $this->transaction->toTransaction()->jsonSerialize()['marks']['spear']
+            $this->transaction->toTransaction()->jsonSerialize()['marks']['attack']['spear']
         );
     }
 
