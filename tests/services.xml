@@ -38,8 +38,13 @@
             <argument>0</argument>
         </service>
 
-        <service id="middleware.dummy_handler" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler">
+        <service id="middleware.dummy_normal_handler" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler">
             <argument>0</argument>
+        </service>
+
+        <service id="middleware.dummy_exception_handler" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler">
+            <argument>0</argument>
+            <argument>true</argument>
         </service>
     </services>
 </container>
