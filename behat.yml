@@ -14,3 +14,6 @@ default:
         - TechDeCo\ElasticApmAgent\Tests\Acceptance\ConvenienceContext:
             - "@cache.wrapper"
             - "@http.wrapper"
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\MiddlewareContext:
+            - "@client.async"
+            - "@middleware.dummy_handler"

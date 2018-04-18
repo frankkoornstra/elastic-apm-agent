@@ -37,5 +37,9 @@
         <service id="http.dummy" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHttpClient">
             <argument>0</argument>
         </service>
+
+        <service id="middleware.dummy_handler" class="TechDeCo\ElasticApmAgent\Tests\Dummy\DummyHandler">
+            <argument>0</argument>
+        </service>
     </services>
 </container>
