@@ -78,9 +78,13 @@ final class OpenTransaction
         $this->spanList[] = $span;
     }
 
-    public function addMark(string $event, float $timestamp): void
+    public function addMark(string $group, string $event, float $timestamp): void
     {
-        $this->markList[$event] = $timestamp;
+        if (! isset($this->markList[$group])) {
+            $this->markList[$group] = [];
+        }
+
+        $this->markList[$group][$event] = $timestamp;
     }
 
     public function toTransaction(): Transaction
@@ -94,8 +98,10 @@ final class OpenTransaction
         );
         $transaction = $transaction->withSpan(...$this->spanList);
 
-        foreach ($this->markList as $event => $timestamp) {
-            $transaction = $transaction->marking($event, $timestamp);
+        foreach ($this->markList as $group => $eventList) {
+            foreach ($eventList as $event => $timestamp) {
+                $transaction = $transaction->marking($group, $event, $timestamp);
+            }
         }
 
         $transaction = $transaction->inContext(

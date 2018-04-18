@@ -194,7 +194,7 @@ final class TransactionMiddlewareTest extends TestCase
             ],
             'transaction mark' => [
                 function (array $data): bool {
-                    return $data['transactions'][0]['marks'][DummyHandler::MARK_NAME] === DummyHandler::MARK_VALUE;
+                    return $data['transactions'][0]['marks'][DummyHandler::MARK_GROUP][DummyHandler::MARK_NAME] === DummyHandler::MARK_VALUE;
                 },
             ],
         ];

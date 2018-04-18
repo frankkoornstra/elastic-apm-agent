@@ -17,6 +17,7 @@ final class DummyHandler implements RequestHandlerInterface
 {
     public const EXCEPTION_MESSAGE = 'test';
     public const EXCEPTION_CODE    = 255;
+    public const MARK_GROUP        = 'group1';
     public const MARK_NAME         = 'mark1';
     public const MARK_VALUE        = 3.45;
     public const SPAN_NAME         = 'postgres';
@@ -51,7 +52,7 @@ final class DummyHandler implements RequestHandlerInterface
 
         /** @var OpenTransaction $transaction */
         $transaction = $request->getAttribute(TransactionMiddleware::TRANSACTION_ATTRIBUTE);
-        $transaction->addMark(self::MARK_NAME, self::MARK_VALUE);
+        $transaction->addMark(self::MARK_GROUP, self::MARK_NAME, self::MARK_VALUE);
         $transaction->addSpan(new Span(4.5, self::SPAN_NAME, 0.0, 'db'));
 
         if ($this->throwsException) {
