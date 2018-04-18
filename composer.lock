@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "34e1882882e82187b1310bf8b2d708c8",
+    "content-hash": "13833e11b3c926cb29537b52ba38ec01",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2404,6 +2404,48 @@
                 "php"
             ],
             "time": "2018-02-28T20:30:58+00:00"
+        },
+        {
+            "name": "northwoods/broker",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/northwoods/broker.git",
+                "reference": "d8a9f54c6566a36d6cc6b84b02aa1b48414bcd35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/northwoods/broker/zipball/d8a9f54c6566a36d6cc6b84b02aa1b48414bcd35",
+                "reference": "d8a9f54c6566a36d6cc6b84b02aa1b48414bcd35",
+                "shasum": ""
+            },
+            "require": {
+                "psr/container": "^1.0",
+                "psr/http-message": "^1.0",
+                "psr/http-server-middleware": "^1.0"
+            },
+            "require-dev": {
+                "eloquent/phony-phpunit": "^3.0",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Northwoods\\Broker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Woody Gilk",
+                    "email": "woody.gilk@gmail.com"
+                }
+            ],
+            "description": "A conditional dispatcher for PSR-15 middleware",
+            "time": "2018-01-26T15:02:20+00:00"
         },
         {
             "name": "ocramius/package-versions",
