@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Ramsey\Uuid\Uuid;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\ErrorMiddleware;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
@@ -45,7 +45,7 @@ final class ErrorMiddlewareTest extends TestCase
     private $request;
 
     /**
-     * @var AsyncClient|ObjectProphecy
+     * @var Client|ObjectProphecy
      */
     private $client;
 
@@ -83,7 +83,7 @@ final class ErrorMiddlewareTest extends TestCase
         );
         $this->request     = (new ServerRequest('GET', 'http://foo.bar'))
             ->withAttribute(TransactionMiddleware::TRANSACTION_ATTRIBUTE, $this->transaction);
-        $this->client      = $this->prophesize(AsyncClient::class);
+        $this->client      = $this->prophesize(Client::class);
         $this->service     = new Service(new VersionedName('alloy', '1'), 'focus');
         $this->process     = new Process(3);
         $this->system      = (new System())->atHost('foo.bar');
@@ -97,19 +97,17 @@ final class ErrorMiddlewareTest extends TestCase
 
     public function testReturnsResponseWhenNoException(): void
     {
-        $this->client->sendErrorAsync(Argument::any())->shouldNotBeCalled();
+        $this->client->sendError(Argument::any())->shouldNotBeCalled();
         $dummy = new DummyHandler(0);
 
         self::assertInstanceOf(ResponseInterface::class, $this->middleware->process($this->request, $dummy));
     }
 
-    public function testSendsErrorAndWaitsForResponses(): void
+    public function testSendsErrorForResponses(): void
     {
         $this->expectException(\Throwable::class);
 
-        $this->client->sendErrorAsync(Argument::type(Error::class))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendError(Argument::type(Error::class))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $this->dummy);
@@ -127,9 +125,7 @@ final class ErrorMiddlewareTest extends TestCase
 
             return $ensuresData($data);
         };
-        $this->client->sendErrorAsync(Argument::that($packedEnsuresData))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendError(Argument::that($packedEnsuresData))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $this->dummy);

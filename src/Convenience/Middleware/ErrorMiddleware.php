@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Message\Context;
@@ -35,7 +35,7 @@ final class ErrorMiddleware extends Middleware
     private $context;
 
     public function __construct(
-        AsyncClient $client,
+        Client $client,
         Service $service,
         Process $process,
         System $system,
@@ -60,8 +60,7 @@ final class ErrorMiddleware extends Middleware
                 ->onSystem($this->system)
                 ->inProcess($this->process);
 
-            $this->client->sendErrorAsync($request);
-            $this->client->waitForResponses();
+            $this->client->sendError($request);
 
             throw $t;
         }

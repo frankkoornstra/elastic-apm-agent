@@ -11,14 +11,16 @@ use Http\Message\MessageFactory;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\ClientConfiguration;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Request\Error;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
+use Throwable;
 use function json_encode;
+use function register_shutdown_function;
 
-final class HttplugAsyncClient implements AsyncClient
+final class HttplugAsyncClient implements Client
 {
     /**
      * @var ClientConfiguration
@@ -51,12 +53,14 @@ final class HttplugAsyncClient implements AsyncClient
         $this->config             = $config;
         $this->httpClient         = $httpClient ?? HttpAsyncClientDiscovery::find();
         $this->httpMessageFactory = $httpMessageFactory ?? MessageFactoryDiscovery::find();
+
+        register_shutdown_function([$this, 'waitForResponses']);
     }
 
     /**
      * @throws ClientException
      */
-    public function sendTransactionAsync(Transaction $transaction): void
+    public function sendTransaction(Transaction $transaction): void
     {
         $request = $this->httpMessageFactory->createRequest(
             'POST',
@@ -71,7 +75,7 @@ final class HttplugAsyncClient implements AsyncClient
     /**
      * @throws ClientException
      */
-    public function sendErrorAsync(Error $error): void
+    public function sendError(Error $error): void
     {
         $request = $this->httpMessageFactory->createRequest(
             'POST',
@@ -81,6 +85,23 @@ final class HttplugAsyncClient implements AsyncClient
         );
 
         $this->sendRequest($request);
+    }
+
+    /**
+     * @throws ClientException
+     */
+    private function sendRequest(RequestInterface $request): void
+    {
+        try {
+            $request = $request->withHeader('Content-Type', 'application/json');
+            if ($this->config->needsAuthentication()) {
+                $request = $request->withHeader('Authorization', 'Bearer ' . $this->config->getToken());
+            }
+
+            $this->promiseList[] = $this->httpClient->sendAsyncRequest($request);
+        } catch (\Throwable $e) {
+            throw new ClientException('Could not send request due to configuration error', 0, $e);
+        }
     }
 
     /**
@@ -101,30 +122,15 @@ final class HttplugAsyncClient implements AsyncClient
                 if ($status >= 500) {
                     throw ClientException::fromResponse('APM internal server error', $response);
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $exceptionList[] = $e;
             }
         }
 
+        $this->promiseList = [];
+
         if (! empty($exceptionList)) {
             throw ClientException::fromException('Encountered errors while resolving requests', ...$exceptionList);
-        }
-    }
-
-    /**
-     * @throws ClientException
-     */
-    private function sendRequest(RequestInterface $request): void
-    {
-        try {
-            $request = $request->withHeader('Content-Type', 'application/json');
-            if ($this->config->needsAuthentication()) {
-                $request = $request->withHeader('Authorization', 'Bearer ' . $this->config->getToken());
-            }
-
-            $this->promiseList[] = $this->httpClient->sendAsyncRequest($request);
-        } catch (\Throwable $e) {
-            throw new ClientException('Could not send request due to configuration error', 0, $e);
         }
     }
 }
