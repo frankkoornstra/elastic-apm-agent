@@ -42,8 +42,7 @@ final class TransactionMiddleware extends Middleware
                 ->onSystem($this->system)
                 ->inProcess($this->process);
 
-            $this->client->sendTransactionAsync($transaction);
-            $this->client->waitForResponses();
+            $this->client->sendTransaction($transaction);
         }
     }
 

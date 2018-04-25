@@ -10,7 +10,7 @@ use Northwoods\Broker\Broker;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client\HttplugAsyncClient;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\ErrorMiddleware;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
@@ -23,7 +23,7 @@ use Throwable;
 final class MiddlewareContext implements Context
 {
     /**
-     * @var AsyncClient
+     * @var HttplugAsyncClient
      */
     private $client;
 
@@ -63,7 +63,7 @@ final class MiddlewareContext implements Context
     private $exceptionHandler;
 
     public function __construct(
-        AsyncClient $client,
+        HttplugAsyncClient $client,
         RequestHandlerInterface $normalHandler,
         RequestHandlerInterface $exceptionHandler
     ) {
@@ -134,6 +134,7 @@ final class MiddlewareContext implements Context
 
         try {
             $this->stack->handle($request, $handler);
+            $this->client->waitForResponses();
         } catch (Throwable $e) {
             $this->throwable = $e;
         }

@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Ramsey\Uuid\Uuid;
-use TechDeCo\ElasticApmAgent\AsyncClient;
 use TechDeCo\ElasticApmAgent\Client\HttplugAsyncClient;
 use TechDeCo\ElasticApmAgent\ClientConfiguration;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
@@ -66,7 +66,7 @@ final class HttplugAsyncClientTest extends TestCase
     private $error;
 
     /**
-     * @var AsyncClient
+     * @var HttplugAsyncClient
      */
     private $client;
 
@@ -100,8 +100,25 @@ final class HttplugAsyncClientTest extends TestCase
                          ->willReturn($this->promise->reveal());
     }
 
+    /**
+     * @return ObjectProphecy|Promise
+     */
+    private function setUpPromiseResponse(ResponseInterface $response)
+    {
+        return $this->promise->wait()->willReturn($response);
+    }
+
+    /**
+     * @return ObjectProphecy|Promise
+     */
+    private function setUpPromisResponseOk()
+    {
+        return $this->setUpPromiseResponse(new Response(200, [], 'good'));
+    }
+
     public function testSendTransactionSendsRightRequest(): void
     {
+        $this->setUpPromisResponseOk();
         $encoded = json_encode($this->transaction);
         $this->messageFactory
             ->createRequest(
@@ -116,11 +133,12 @@ final class HttplugAsyncClientTest extends TestCase
                          ->shouldBecalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
     }
 
     public function testSendErrorSendsRightRequest(): void
     {
+        $this->setUpPromisResponseOk();
         $encoded = json_encode($this->error);
         $this->messageFactory
             ->createRequest(
@@ -135,11 +153,12 @@ final class HttplugAsyncClientTest extends TestCase
                          ->shouldBecalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendErrorAsync($this->error);
+        $this->client->sendError($this->error);
     }
 
     public function testSendsAppropriateHeaders(): void
     {
+        $this->setUpPromisResponseOk();
         $hasRightHeaders = function (RequestInterface $request): bool {
             return $request->getHeaderLine('Content-Type') === 'application/json' &&
                 $request->getHeaderLine('Authorization') === 'Bearer spear';
@@ -148,29 +167,28 @@ final class HttplugAsyncClientTest extends TestCase
                          ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
     }
 
     public function testHttpClientExceptionsGetTransformed(): void
     {
         $this->expectException(ClientException::class);
+        $this->setUpPromisResponseOk();
 
         $this->httpClient->sendAsyncRequest(Argument::any())
                          ->willThrow(new Exception('transform this'));
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
     }
 
     public function testHttp200Response(): void
     {
-        $response = new Response(200, [], 'good');
-        $this->promise->wait()
-                      ->willReturn($response);
+        $this->setUpPromiseResponse(new Response(200, [], 'good'));
         $this->httpClient->sendAsyncRequest(Argument::any())
                          ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
     }
 
@@ -178,14 +196,12 @@ final class HttplugAsyncClientTest extends TestCase
     {
         $this->expectException(ClientException::class);
 
-        $response = new Response(400, [], 'your bad');
-        $this->promise->wait()
-                      ->willReturn($response);
+        $this->setUpPromiseResponse(new Response(400, [], 'your bad'));
         $this->httpClient->sendAsyncRequest(Argument::any())
                          ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
     }
 
@@ -193,14 +209,12 @@ final class HttplugAsyncClientTest extends TestCase
     {
         $this->expectException(ClientException::class);
 
-        $response = new Response(500, [], 'our bad');
-        $this->promise->wait()
-                      ->willReturn($response);
+        $this->setUpPromiseResponse(new Response(500, [], 'our bad'));
         $this->httpClient->sendAsyncRequest(Argument::any())
                          ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
     }
 
@@ -225,9 +239,9 @@ final class HttplugAsyncClientTest extends TestCase
                              $promiseC->reveal()
                          );
 
-        $this->client->sendTransactionAsync($this->transaction);
-        $this->client->sendTransactionAsync($this->transaction);
-        $this->client->sendTransactionAsync($this->transaction);
+        $this->client->sendTransaction($this->transaction);
+        $this->client->sendTransaction($this->transaction);
+        $this->client->sendTransaction($this->transaction);
 
         try {
             $this->client->waitForResponses();

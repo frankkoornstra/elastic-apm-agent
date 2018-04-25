@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Ramsey\Uuid\Uuid;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\Convenience\HttplugHttpClient\HttpClientWrapper;
 use TechDeCo\ElasticApmAgent\Convenience\Middleware\TransactionMiddleware;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
@@ -36,7 +36,7 @@ final class TransactionMiddlewareTest extends TestCase
     private $request;
 
     /**
-     * @var AsyncClient|ObjectProphecy
+     * @var Client|ObjectProphecy
      */
     private $client;
 
@@ -67,7 +67,7 @@ final class TransactionMiddlewareTest extends TestCase
     {
         $this->dummy      = new DummyHandler(1);
         $this->request    = new ServerRequest('GET', 'http://foo.bar');
-        $this->client     = $this->prophesize(AsyncClient::class);
+        $this->client     = $this->prophesize(Client::class);
         $this->service    = new Service(new VersionedName('alloy', '1'), 'focus');
         $this->process    = new Process(3);
         $this->system     = (new System())->atHost('foo.bar');
@@ -90,9 +90,7 @@ final class TransactionMiddlewareTest extends TestCase
 
     public function testSendsTransactionAndWaitsForResponsesWithNormalResponse(): void
     {
-        $this->client->sendTransactionAsync(Argument::type(Transaction::class))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendTransaction(Argument::type(Transaction::class))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $this->dummy);
@@ -103,9 +101,7 @@ final class TransactionMiddlewareTest extends TestCase
         $this->expectException(\Throwable::class);
         $dummy = new DummyHandler(1, true);
 
-        $this->client->sendTransactionAsync(Argument::type(Transaction::class))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendTransaction(Argument::type(Transaction::class))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $dummy);
@@ -121,9 +117,7 @@ final class TransactionMiddlewareTest extends TestCase
             return $message['duration'] > 15 && $message['duration'] < 20;
         };
 
-        $this->client->sendTransactionAsync(Argument::that($comesCloseToSleep))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendTransaction(Argument::that($comesCloseToSleep))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $dummy);
@@ -139,9 +133,7 @@ final class TransactionMiddlewareTest extends TestCase
 
             return $ensuresData($data);
         };
-        $this->client->sendTransactionAsync(Argument::that($packedEnsuresData))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendTransaction(Argument::that($packedEnsuresData))
                      ->shouldBeCalled();
 
         $this->middleware->process($this->request, $this->dummy);
@@ -208,9 +200,7 @@ final class TransactionMiddlewareTest extends TestCase
 
             return $data['transactions'][0]['context']['tags']['correlation-id'] === $id->toString();
         };
-        $this->client->sendTransactionAsync(Argument::that($ensuresHeader))
-                     ->shouldBeCalled();
-        $this->client->waitForResponses()
+        $this->client->sendTransaction(Argument::that($ensuresHeader))
                      ->shouldBeCalled();
 
         $request = $this->request->withAddedHeader(HttpClientWrapper::CORRELATION_ID_HEADER, $id->toString());

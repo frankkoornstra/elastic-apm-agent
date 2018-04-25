@@ -6,13 +6,13 @@ namespace TechDeCo\ElasticApmAgent\Tests\Acceptance;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use PHPUnit\Framework\Assert;
-use TechDeCo\ElasticApmAgent\AsyncClient;
+use TechDeCo\ElasticApmAgent\Client\HttplugAsyncClient;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 
 final class AsyncRequestContext implements Context
 {
     /**
-     * @var AsyncClient
+     * @var HttplugAsyncClient
      */
     private $client;
 
@@ -26,7 +26,7 @@ final class AsyncRequestContext implements Context
      */
     private $transactionRequestProvider;
 
-    public function __construct(AsyncClient $client)
+    public function __construct(HttplugAsyncClient $client)
     {
         $this->client = $client;
     }
@@ -47,7 +47,7 @@ final class AsyncRequestContext implements Context
     public function iSendTheTransactionsAsynchronously(): void
     {
         try {
-            $this->client->sendTransactionAsync($this->transactionRequestProvider->createRequest());
+            $this->client->sendTransaction($this->transactionRequestProvider->createRequest());
         } catch (ClientException $e) {
             $this->exception = $e;
         }
