@@ -2,20 +2,9 @@
 
 Release 6.2 of the Elastic stack saw to the the dawn of [Application Performance Monitoring](https://www.elastic.co/guide/en/apm/server/current/overview.html). APM agents in several languages were released with it but _somehow_ PHP was not amongst them ¯\_(ツ)_/¯ This library adds that APM agent so we can happily ship our application performance measurements to the Elastic APM Server.
 
-**ATTENTION: Work in progress**
+**ATTENTION: Alpha**
 
-This readme functions both as documentation and as a means to communicate the goals for this library. Since the library is still very much **alpha, so work in progress** not all goals have been met. In the list below you can find the progress:
-
-- [x] Setup package
-- [x] Setup tooling around tests an code quality
-- [x] Setup acceptance tests
-- [x] Create messages and requests
-- [x] Create interface for synchronous and asynchronous clients
-- [x] Implement asynchronous client
-- [x] Create PSR-15 middleware
-- [x] Create a PSR-6 cache wrapper
-- [x] Create a HTTPlug HTTP client wrapper
-- [ ] Create a PHP-HTTP plugin to [automatically wrap HTTP clients](http://docs.php-http.org/en/latest/components/client-common.html)
+Currently the library is in the alpha phase, meaning the interface might still change (drastically) and it is not ready for production use. I'd highly appreciate it if you try out the current version and [report any issues you come across](https://github.com/frankkoornstra/elastic-apm-agent/issues). 
 
 ## Installation
 
