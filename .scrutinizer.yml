@@ -1,24 +1,26 @@
 build:
-    environment:
-        mysql: false
-        postgresql: false
-        redis: false
-        elasticsearch: false
-        php:
-            version: 7.2
-    cache:
-        disabled: false
-        directories:
-            - ~/.composer/cache
-    project_setup:
-        override: true
-    tests:
-        override:
-            -
-                command: 'vendor/bin/phpunit --testsuite=unit --coverage-clover=coverage.xml'
-                coverage:
-                    file: 'coverage.xml'
-                    format: 'clover'
+    nodes:
+        analysis:
+            environment:
+                mysql: false
+                postgresql: false
+                redis: false
+                elasticsearch: false
+                php:
+                    version: 7.2
+            cache:
+                disabled: false
+                directories:
+                    - ~/.composer/cache
+            project_setup:
+                override: true
+            tests:
+                override:
+                    -
+                        command: 'vendor/bin/phpunit --testsuite=unit --coverage-clover=coverage.xml'
+                        coverage:
+                            file: 'coverage.xml'
+                            format: 'clover'
 
 checks:
     php:
