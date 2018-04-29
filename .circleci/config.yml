@@ -18,16 +18,12 @@ jobs:
     docker:
       - image: circleci/php:7.2
     steps:
-      - run: sudo composer self-update
-      - run: composer config -g github-oauth.github.com $GITHUB_TOKEN
       - checkout
-
       - restore_cache:
           keys:
             - project-dependencies-{{ checksum "~/project/composer.lock" }}
             - composer-cache
-
-      - run: composer install -n -o
+      - run: make ci-dependencies
       - save_cache:
           key: project-dependencies-{{ checksum "~/project/composer.lock" }}
           paths:
@@ -36,12 +32,11 @@ jobs:
           key: composer-cache
           paths:
             - ~/.composer/cache
-
-      - run: mkdir -p ~/phpunit && ./vendor/bin/phpunit --testsuite=unit --log-junit ~/phpunit/unit.xml
+      - run: make test-unit
       - store_test_results:
-          path: ~/phpunit
+          path: build/unit
       - store_artifacts:
-          path: ~/phpunit
+          path: build/unit
 
   acceptance-tests:
     machine: true
@@ -51,8 +46,7 @@ jobs:
           keys:
             - project-dependencies-{{ checksum "~/project/composer.lock" }}
             - composer-cache
-
-      - run: docker run --rm --volume $(pwd):/app --entrypoint /bin/bash composer -c "composer config -g github-oauth.github.com $GITHUB_TOKEN && composer install -a"
+      - run: docker run --rm --volume $(pwd):/app --entrypoint /bin/bash composer -c "composer config -g github-oauth.github.com $GITHUB_TOKEN && composer install -n -o"
       - save_cache:
           key: project-dependencies-{{ checksum "~/project/composer.lock" }}
           paths:
@@ -61,31 +55,23 @@ jobs:
           key: composer-cache
           paths:
             - ~/.composer/cache
-
-      - run: mkdir -p tmp/test-artifacts
-      - run: sudo sysctl -w vm.max_map_count=262144
-      - run: docker-compose -f docker-compose-test.yml up -d
-      - run: docker-compose -f docker-compose-test.yml run test sh -c "cd /project && vendor/bin/behat -f progress -o std -f junit -o tmp/test-artifacts"
+      - run: make ci-acceptance-environment
+      - run: make test-acceptance
       - store_test_results:
-          path: tmp/test-artifacts
+          path: build/acceptance
       - store_artifacts:
-          path: tmp/test-artifacts
+          path: build/acceptance
 
   phpstan:
     docker:
       - image: circleci/php:7.2
     steps:
-      - run: sudo docker-php-ext-install pcntl
-      - run: sudo composer self-update
-      - run: composer config -g github-oauth.github.com $GITHUB_TOKEN
       - checkout
-
       - restore_cache:
           keys:
             - project-dependencies-{{ checksum "~/project/composer.lock" }}
             - composer-cache
-
-      - run: composer install -n -o
+      - run: make ci-dependencies
       - save_cache:
           key: project-dependencies-{{ checksum "~/project/composer.lock" }}
           paths:
@@ -94,23 +80,18 @@ jobs:
           key: composer-cache
           paths:
             - ~/.composer/cache
-      - run: env $(cat .env.dist | sed -e 's/MODE=dev/MODE=test/' | xargs) ./vendor/bin/phpstan analyse -c phpstan.neon -l max src
-      - run: env $(cat .env.dist | sed -e 's/MODE=dev/MODE=test/' | xargs) ./vendor/bin/phpstan analyse -c phpstan.neon -l 4 tests
+      - run: make phpstan
 
   phpcs:
     docker:
       - image: circleci/php:7.2
     steps:
-      - run: sudo composer self-update
-      - run: composer config -g github-oauth.github.com $GITHUB_TOKEN
       - checkout
-
       - restore_cache:
           keys:
             - project-dependencies-{{ checksum "~/project/composer.lock" }}
             - composer-cache
-
-      - run: composer install -n -o
+      - run: make ci-dependencies
       - save_cache:
           key: project-dependencies-{{ checksum "~/project/composer.lock" }}
           paths:
@@ -119,5 +100,4 @@ jobs:
           key: composer-cache
           paths:
             - ~/.composer/cache
-
-      - run: ./vendor/bin/phpcs
+      - run: make phpcs
