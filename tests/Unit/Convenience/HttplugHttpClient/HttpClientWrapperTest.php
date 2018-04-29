@@ -70,7 +70,7 @@ final class HttpClientWrapperTest extends TestCase
     public function testAddsSpanWithNormalResponse(): void
     {
         $data = $this->transaction->toTransaction()->jsonSerialize();
-        self::assertEmpty($data['spans']);
+        self::assertArrayNotHasKey('spans', $data);
 
         $this->wrapper->sendRequest($this->request);
 
@@ -83,7 +83,7 @@ final class HttpClientWrapperTest extends TestCase
         $this->expectException(Exception::class);
 
         $data = $this->transaction->toTransaction()->jsonSerialize();
-        self::assertEmpty($data['spans']);
+        self::assertArrayNotHasKey('spans', $data);
 
         $wrapper = new HttpClientWrapper(new DummyHttpClient(0, true));
         $wrapper->setOpenTransaction($this->transaction);
