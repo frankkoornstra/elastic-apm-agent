@@ -1,6 +1,6 @@
 {
     "name": "techdeco/elastic-apm-agent",
-    "description": "An agent for the Elastic Application Performance Management server",
+    "description": "An agent for the Elastic Application Performance Monitoring server",
     "type": "library",
     "keywords": ["elastic", "apm", "monitoring", "performance"],
     "license": "MIT",
