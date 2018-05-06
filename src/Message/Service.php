@@ -95,12 +95,12 @@ final class Service implements JsonSerializable
     public function jsonSerialize(): array
     {
         return Serialization::filterUnset([
-            'agent' => $this->agent ? $this->agent->jsonSerialize() : null,
-            'framework' => $this->framework ? $this->framework->jsonSerialize() : null,
-            'language' => $this->language ? $this->language->jsonSerialize() : null,
+            'agent' => Serialization::serializeOr($this->agent),
+            'framework' => Serialization::serializeOr($this->framework),
+            'language' => Serialization::serializeOr($this->language),
             'name' => $this->name,
             'environment' => $this->environment,
-            'runtime' => $this->runtime ? $this->runtime->jsonSerialize() : null,
+            'runtime' => Serialization::serializeOr($this->runtime),
             'version' => $this->version,
         ]);
     }

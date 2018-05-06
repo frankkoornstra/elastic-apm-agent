@@ -120,13 +120,13 @@ final class Error implements JsonSerializable
     public function jsonSerialize(): array
     {
         return Serialization::filterUnset([
-            'context' => $this->context ? $this->context->jsonSerialize() : null,
+            'context' => Serialization::serializeOr($this->context),
             'culprit' => $this->culprit,
-            'exception' => $this->exception ? $this->exception->jsonSerialize() : null,
+            'exception' => Serialization::serializeOr($this->exception),
             'id' => $this->id ? $this->id->toString() : null,
-            'log' => $this->log ? $this->log->jsonSerialize() : null,
-            'timestamp' => $this->timestamp ? $this->timestamp->jsonSerialize() : null,
-            'transaction' => $this->transactionId ? $this->transactionId->toString() : null,
+            'log' => Serialization::serializeOr($this->log),
+            'timestamp' => Serialization::serializeOr($this->timestamp),
+            'transaction' => Serialization::serializeOr($this->transactionId),
         ]);
     }
 }
