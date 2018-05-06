@@ -61,9 +61,9 @@ final class Error implements JsonSerializable
     {
         return Serialization::filterUnset([
             'service' => $this->service->jsonSerialize(),
-            'process' => $this->process ? $this->process->jsonSerialize() : null,
+            'process' => Serialization::serializeOr($this->process),
             'errors' => Serialization::serialize(...$this->errorList),
-            'system' => $this->system ? $this->system->jsonSerialize() : null,
+            'system' => Serialization::serializeOr($this->system),
         ]);
     }
 }

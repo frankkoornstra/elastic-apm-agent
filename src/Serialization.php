@@ -38,4 +38,13 @@ final class Serialization
             return $frame->jsonSerialize();
         }, $serializable);
     }
+
+    /**
+     * @param mixed $fallback
+     * @return mixed
+     */
+    public static function serializeOr(?JsonSerializable $serializable, $fallback = null)
+    {
+        return $serializable === null ? $fallback : $serializable->jsonSerialize();
+    }
 }

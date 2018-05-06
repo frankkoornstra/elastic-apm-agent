@@ -145,7 +145,7 @@ final class Transaction implements JsonSerializable
     public function jsonSerialize(): array
     {
         return Serialization::filterUnset([
-            'context' => $this->context ? $this->context->jsonSerialize() : null,
+            'context' => Serialization::serializeOr($this->context),
             'duration' => $this->duration,
             'id' => $this->id->toString(),
             'name' => $this->name,

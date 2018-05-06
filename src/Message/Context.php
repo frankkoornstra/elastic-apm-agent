@@ -83,8 +83,8 @@ final class Context implements JsonSerializable
     {
         return Serialization::filterUnset([
             'custom' => $this->custom,
-            'response' => $this->response ? $this->response->jsonSerialize() : null,
-            'request' => $this->request ? $this->request->jsonSerialize() : null,
+            'response' => Serialization::serializeOr($this->response),
+            'request' => Serialization::serializeOr($this->request),
             'tags' => $this->tagList,
             'user' => $this->user,
         ]);

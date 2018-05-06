@@ -122,7 +122,7 @@ final class Request implements JsonSerializable
             'headers' => $this->headerList,
             'http_version' => $this->httpVersion,
             'method' => $this->method,
-            'socket' => $this->socket ? $this->socket->jsonSerialize() : null,
+            'socket' => Serialization::serializeOr($this->socket),
             'url' => $this->url->jsonSerialize(),
             'cookies' => $this->cookieList,
         ]);
