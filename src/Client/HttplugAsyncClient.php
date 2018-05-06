@@ -112,16 +112,7 @@ final class HttplugAsyncClient implements Client
         $exceptionList = [];
         foreach ($this->promiseList as $promise) {
             try {
-                /** @var ResponseInterface $response */
-                $response = $promise->wait();
-                $status   = $response->getStatusCode();
-
-                if ($status >= 400 && $status < 500) {
-                    throw ClientException::fromResponse('Bad request', $response);
-                }
-                if ($status >= 500) {
-                    throw ClientException::fromResponse('APM internal server error', $response);
-                }
+                $this->verifyResponse($promise->wait());
             } catch (Throwable $e) {
                 $exceptionList[] = $e;
             }
@@ -131,6 +122,21 @@ final class HttplugAsyncClient implements Client
 
         if (! empty($exceptionList)) {
             throw ClientException::fromException('Encountered errors while resolving requests', ...$exceptionList);
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    private function verifyResponse(ResponseInterface $response): void
+    {
+        $status = $response->getStatusCode();
+
+        if ($status >= 400 && $status < 500) {
+            throw ClientException::fromResponse('Bad request', $response);
+        }
+        if ($status >= 500) {
+            throw ClientException::fromResponse('APM internal server error', $response);
         }
     }
 }
