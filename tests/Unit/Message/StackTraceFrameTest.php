@@ -19,6 +19,7 @@ final class StackTraceFrameTest extends TestCase
             ->inModule('zeta')
             ->withPostContext('$baz = 3')
             ->withPreContext('$foo = 2')
+            ->withLocalVariable('program', 'gaia')
             ->jsonSerialize();
         $expected = [
             'abs_path' => '/root/alloy.txt',
@@ -31,6 +32,7 @@ final class StackTraceFrameTest extends TestCase
             'module' => 'zeta',
             'post_context' => ['$baz = 3'],
             'pre_context' => ['$foo = 2'],
+            'vars' => ['program' => 'gaia'],
         ];
 
         self::assertEquals($expected, $actual);

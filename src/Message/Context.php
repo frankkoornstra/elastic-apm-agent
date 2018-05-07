@@ -86,7 +86,7 @@ final class Context implements JsonSerializable
             'response' => Serialization::serializeOr($this->response),
             'request' => Serialization::serializeOr($this->request),
             'tags' => $this->tagList,
-            'user' => $this->user,
+            'user' => Serialization::serializeOr($this->user),
         ]);
     }
 }
