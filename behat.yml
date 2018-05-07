@@ -21,7 +21,8 @@ default:
             - "@client.async"
             - "@middleware.dummy_normal_handler"
             - "@middleware.dummy_exception_handler"
-
+        - TechDeCo\ElasticApmAgent\Tests\Acceptance\LogContext:
+            - "@logger"
 ci:
   formatters:
     pretty: false
