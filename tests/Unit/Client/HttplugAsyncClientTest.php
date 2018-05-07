@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TechDeCo\ElasticApmAgent\Tests\Unit\Client;
 
 use Exception;
+use Gamez\Psr\Log\TestLogger;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Http\Client\HttpAsyncClient;
@@ -30,6 +31,11 @@ use function json_encode;
 
 final class HttplugAsyncClientTest extends TestCase
 {
+    /**
+     * @var TestLogger
+     */
+    private $logger;
+
     /**
      * @var ClientConfiguration
      */
@@ -75,12 +81,14 @@ final class HttplugAsyncClientTest extends TestCase
      */
     public function setUpDependencies(): void
     {
+        $this->logger         = new TestLogger();
         $this->config         = (new ClientConfiguration('http://apm'))->authenticatedByToken('spear');
         $this->httpClient     = $this->prophesize(HttpAsyncClient::class);
         $this->messageFactory = $this->prophesize(MessageFactory::class);
         $this->request        = new Request('POST', 'http://apm');
         $this->promise        = $this->prophesize(Promise::class);
         $this->client         = new HttplugAsyncClient(
+            $this->logger,
             $this->config,
             $this->httpClient->reveal(),
             $this->messageFactory->reveal()
@@ -136,6 +144,24 @@ final class HttplugAsyncClientTest extends TestCase
         $this->client->sendTransaction($this->transaction);
     }
 
+    public function testSendTransactionLogsAuthentication(): void
+    {
+        $this->setUpPromisResponseOk();
+
+        $this->client->sendTransaction($this->transaction);
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('authentication token'));
+    }
+
+    public function testSendTransactionLogsSendingAsyncRequest(): void
+    {
+        $this->setUpPromisResponseOk();
+
+        $this->client->sendTransaction($this->transaction);
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('Sending asynchronous request'));
+    }
+
     public function testSendErrorSendsRightRequest(): void
     {
         $this->setUpPromisResponseOk();
@@ -170,7 +196,7 @@ final class HttplugAsyncClientTest extends TestCase
         $this->client->sendTransaction($this->transaction);
     }
 
-    public function testHttpClientExceptionsGetTransformed(): void
+    public function testHttpClientExceptionsGetTransformedAndLogs(): void
     {
         $this->expectException(ClientException::class);
         $this->setUpPromisResponseOk();
@@ -179,6 +205,8 @@ final class HttplugAsyncClientTest extends TestCase
                          ->willThrow(new Exception('transform this'));
 
         $this->client->sendTransaction($this->transaction);
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('error'));
     }
 
     public function testHttp200Response(): void
@@ -190,6 +218,10 @@ final class HttplugAsyncClientTest extends TestCase
 
         $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('Waiting for response'));
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('Successful response '));
+        self::assertFalse($this->logger->log->hasRecordsWithPartialMessage('error'));
     }
 
     public function testHttp400ResponseThrowsException(): void
@@ -203,6 +235,10 @@ final class HttplugAsyncClientTest extends TestCase
 
         $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('Waiting for response'));
+        self::assertFalse($this->logger->log->hasRecordsWithPartialMessage('Successful response '));
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('error'));
     }
 
     public function testHttp500ResponseThrowsException(): void
@@ -216,6 +252,10 @@ final class HttplugAsyncClientTest extends TestCase
 
         $this->client->sendTransaction($this->transaction);
         $this->client->waitForResponses();
+
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('Waiting for response'));
+        self::assertFalse($this->logger->log->hasRecordsWithPartialMessage('Successful response '));
+        self::assertTrue($this->logger->log->hasRecordsWithPartialMessage('error'));
     }
 
     public function testAllPromisesAreResolved(): void

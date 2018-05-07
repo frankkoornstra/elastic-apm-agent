@@ -8,11 +8,13 @@
         </service>
 
         <service id="client.async" class="TechDeCo\ElasticApmAgent\Client\HttplugAsyncClient">
+            <argument type="service" id="logger"/>
             <argument type="service" id="client_configuration"/>
             <argument type="service" id="http_client"/>
             <argument type="service" id="http_message_factory"/>
         </service>
 
+        <service id="logger" class="Gamez\Psr\Log\TestLogger"/>
         <service id="http_client" class="Http\Adapter\Guzzle6\Client"/>
         <service id="http_message_factory" class="Http\Message\MessageFactory\GuzzleMessageFactory"/>
 

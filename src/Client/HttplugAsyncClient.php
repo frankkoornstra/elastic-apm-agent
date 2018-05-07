@@ -11,12 +11,14 @@ use Http\Message\MessageFactory;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\ClientConfiguration;
 use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Request\Error;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
 use Throwable;
+use function count;
 use function json_encode;
 use function register_shutdown_function;
 
@@ -43,13 +45,20 @@ final class HttplugAsyncClient implements Client
     private $promiseList = [];
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @throws DiscoveryException
      */
     public function __construct(
+        LoggerInterface $logger,
         ClientConfiguration $config,
         ?HttpAsyncClient $httpClient,
         ?MessageFactory $httpMessageFactory
     ) {
+        $this->logger             = $logger;
         $this->config             = $config;
         $this->httpClient         = $httpClient ?? HttpAsyncClientDiscovery::find();
         $this->httpMessageFactory = $httpMessageFactory ?? MessageFactoryDiscovery::find();
@@ -93,13 +102,21 @@ final class HttplugAsyncClient implements Client
     private function sendRequest(RequestInterface $request): void
     {
         try {
+            $requestCount = count($this->promiseList) + 1;
+
             $request = $request->withHeader('Content-Type', 'application/json');
             if ($this->config->needsAuthentication()) {
+                $this->logger->debug('Adding authentication token to request');
                 $request = $request->withHeader('Authorization', 'Bearer ' . $this->config->getToken());
             }
 
+            $this->logger->debug('Sending asynchronous request #' . $requestCount);
             $this->promiseList[] = $this->httpClient->sendAsyncRequest($request);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+            $this->logger->error('Encountered error while sending asynchronous request #' . $requestCount, [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+            ]);
             throw new ClientException('Could not send request due to configuration error', 0, $e);
         }
     }
@@ -110,10 +127,17 @@ final class HttplugAsyncClient implements Client
     public function waitForResponses(): void
     {
         $exceptionList = [];
-        foreach ($this->promiseList as $promise) {
+        foreach ($this->promiseList as $index => $promise) {
             try {
+                $requestCount = $index + 1;
+                $this->logger->debug('Waiting for response on request #' . $requestCount);
                 $this->verifyResponse($promise->wait());
+                $this->logger->debug('Successful response on request #' . $requestCount);
             } catch (Throwable $e) {
+                $this->logger->error('Encountered error in response for request #' . $requestCount, [
+                    'exception' => $e,
+                    'message' => $e->getMessage(),
+                ]);
                 $exceptionList[] = $e;
             }
         }
