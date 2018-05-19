@@ -30,14 +30,19 @@ To send data to the APM server, the APM agent in this library needs an HTTP clie
 
 The same goes for not forcing you into a choice for a specific HTTP message factory, which leaves your project to provide an implementation of `php-http/message-factory-implementation`, for which you can find possible candidates at [the PHP-HTTP site](http://docs.php-http.org/en/latest/message/message-factory.html)
 
+### PSR logger dependency
+
+And also for logging, this package needs an implementation so that the client can notify you when things go sideways. You can find all implementation for `psr/log-implemtation` at [Packagist](https://packagist.org/providers/psr/log-implementation). If you don't know which one to pick, [Monolog](https://packagist.org/packages/monolog/monolog) is an excellent one.
+
 ## Configuration
 
-To tell the library how to connect to the APM Server, initialize a `ClientConfiguration` object and give it to the `HttplugAsyncClient`
+To tell the library how to connect to the APM Server, initialize at least an implementation of `LoggerInterface` and a `ClientConfiguration` object and give it to the `HttplugAsyncClient`. The HTTP client and message factory are optional; if they're not injected, the client will [try to discover them](http://docs.php-http.org/en/latest/discovery.html).
 ```php
 $config         = (new ClientConfiguration('http://foo.bar'))->authenticatedByToken('alloy');
 $httpClient     = ... # Implementation of php-http/async-client-implementation
 $requestFactory = ... # implementation of php-http/message-factory-implementation 
-$client         = new HttplugAsyncClient($config, $httpClient, $requestFactory);
+$logger         = ... # implementation of psr/log-implementation
+$client         = new HttplugAsyncClient($logger, $config, $httpClient, $requestFactory);
 ```
 
 ## Usage
