@@ -8,9 +8,7 @@ use Http\Discovery\Exception as DiscoveryException;
 use Http\Discovery\HttpAsyncClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\MessageFactory;
-use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use TechDeCo\ElasticApmAgent\Client;
 use TechDeCo\ElasticApmAgent\ClientConfiguration;
@@ -40,9 +38,9 @@ final class HttplugAsyncClient implements Client
     private $httpMessageFactory;
 
     /**
-     * @var Promise[]
+     * @var PromiseCollection
      */
-    private $promiseList = [];
+    private $promises;
 
     /**
      * @var LoggerInterface
@@ -62,6 +60,7 @@ final class HttplugAsyncClient implements Client
         $this->config             = $config;
         $this->httpClient         = $httpClient ?? HttpAsyncClientDiscovery::find();
         $this->httpMessageFactory = $httpMessageFactory ?? MessageFactoryDiscovery::find();
+        $this->promises           = new PromiseCollection($logger);
 
         register_shutdown_function([$this, 'waitForResponses']);
     }
@@ -101,9 +100,9 @@ final class HttplugAsyncClient implements Client
      */
     private function sendRequest(RequestInterface $request): void
     {
-        try {
-            $requestCount = count($this->promiseList) + 1;
+        $requestCount = count($this->promises) + 1;
 
+        try {
             $request = $request->withHeader('Content-Type', 'application/json');
             if ($this->config->needsAuthentication()) {
                 $this->logger->debug('Adding authentication token to request');
@@ -111,7 +110,7 @@ final class HttplugAsyncClient implements Client
             }
 
             $this->logger->debug('Sending asynchronous request #' . $requestCount);
-            $this->promiseList[] = $this->httpClient->sendAsyncRequest($request);
+            $this->promises->add($this->httpClient->sendAsyncRequest($request));
         } catch (Throwable $e) {
             $this->logger->error('Encountered error while sending asynchronous request #' . $requestCount, [
                 'exception' => $e,
@@ -126,41 +125,10 @@ final class HttplugAsyncClient implements Client
      */
     public function waitForResponses(): void
     {
-        $exceptionList = [];
-        foreach ($this->promiseList as $index => $promise) {
-            try {
-                $requestCount = $index + 1;
-                $this->logger->debug('Waiting for response on request #' . $requestCount);
-                $this->verifyResponse($promise->wait());
-                $this->logger->debug('Successful response on request #' . $requestCount);
-            } catch (Throwable $e) {
-                $this->logger->error('Encountered error in response for request #' . $requestCount, [
-                    'exception' => $e,
-                    'message' => $e->getMessage(),
-                ]);
-                $exceptionList[] = $e;
-            }
-        }
-
-        $this->promiseList = [];
+        $exceptionList = $this->promises->resolveAll();
 
         if (! empty($exceptionList)) {
             throw ClientException::fromException('Encountered errors while resolving requests', ...$exceptionList);
-        }
-    }
-
-    /**
-     * @throws ClientException
-     */
-    private function verifyResponse(ResponseInterface $response): void
-    {
-        $status = $response->getStatusCode();
-
-        if ($status >= 400 && $status < 500) {
-            throw ClientException::fromResponse('Bad request', $response);
-        }
-        if ($status >= 500) {
-            throw ClientException::fromResponse('APM internal server error', $response);
         }
     }
 }
