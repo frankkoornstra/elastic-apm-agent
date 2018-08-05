@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TechDeCo\ElasticApmAgent\Message;
 
 use JsonSerializable;
+use Psr\Http\Message\RequestInterface;
 use TechDeCo\ElasticApmAgent\Serialization;
 
 final class Request implements JsonSerializable
@@ -52,6 +53,14 @@ final class Request implements JsonSerializable
     {
         $this->method = $method;
         $this->url    = $url;
+    }
+
+    public static function fromHttpRequest(RequestInterface $httpRequest): self
+    {
+        return new self(
+            $httpRequest->getMethod(),
+            Url::fromUri($httpRequest->getUri())
+        );
     }
 
     /**

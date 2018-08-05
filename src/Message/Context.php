@@ -44,12 +44,22 @@ final class Context implements JsonSerializable
         return $me;
     }
 
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
     public function withResponse(Response $response): self
     {
         $me           = clone $this;
         $me->response = $response;
 
         return $me;
+    }
+
+    public function getRequest(): ?Request
+    {
+        return $this->request;
     }
 
     public function withRequest(Request $request): self

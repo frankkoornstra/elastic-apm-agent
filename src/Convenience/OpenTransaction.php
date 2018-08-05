@@ -53,6 +53,11 @@ final class OpenTransaction
      */
     private $correlationId;
 
+    /**
+     * @var Context
+     */
+    private $context;
+
     public function __construct(
         UuidInterface $id,
         string $name,
@@ -66,6 +71,8 @@ final class OpenTransaction
         $this->type               = $type;
         $this->startOfTransaction = microtime(true);
         $this->correlationId      = $correlationId ?? Uuid::uuid4();
+        $this->context            = (new Context())
+            ->withTag(ContextTags::CORRELATION_ID, $this->correlationId->toString());
     }
 
     public function getId(): UuidInterface
@@ -87,6 +94,16 @@ final class OpenTransaction
         $this->markList[$group][$event] = $timestamp;
     }
 
+    public function getContext(): Context
+    {
+        return $this->context;
+    }
+
+    public function setContext(Context $context): void
+    {
+        $this->context = $context;
+    }
+
     public function toTransaction(): Transaction
     {
         $transaction = new Transaction(
@@ -96,17 +113,14 @@ final class OpenTransaction
             $this->timestamp,
             $this->type
         );
-        $transaction = $transaction->withSpan(...$this->spanList);
+        $transaction = $transaction->withSpan(...$this->spanList)
+                                   ->inContext($this->context);
 
         foreach ($this->markList as $group => $eventList) {
             foreach ($eventList as $event => $timestamp) {
                 $transaction = $transaction->marking($group, $event, $timestamp);
             }
         }
-
-        $transaction = $transaction->inContext(
-            (new Context())->withTag(ContextTags::CORRELATION_ID, $this->correlationId->toString())
-        );
 
         return $transaction;
     }
