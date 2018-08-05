@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace TechDeCo\ElasticApmAgent\Message;
 
 use JsonSerializable;
+use Psr\Http\Message\ResponseInterface;
 use TechDeCo\ElasticApmAgent\Serialization;
 
 final class Response implements JsonSerializable
@@ -27,6 +28,11 @@ final class Response implements JsonSerializable
      * @var int|null
      */
     private $httpStatusCode;
+
+    public static function fromHttpResponse(ResponseInterface $response): self
+    {
+        return (new self())->resultingInStatusCode($response->getStatusCode());
+    }
 
     public function thatIsFinished(): self
     {
