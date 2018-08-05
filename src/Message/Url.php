@@ -49,7 +49,7 @@ final class Url implements JsonSerializable
      */
     private $fragment;
 
-    public function __construct()
+    private function __construct()
     {
     }
 
