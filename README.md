@@ -84,6 +84,10 @@ If you want to catch and report `Throwable`s to APM, also include the `ErrorMidd
 
 Sometimes you want to enrich the transaction with data from the request or response. To make this possible, hook up the `OpenTransactionRequestEnrichmentMiddleware` and `OpenTransactionRequestEnrichmentMiddleware` and inject your implementations of respectively `OpenTransactionRequestEnricher`s and `OpenTransactionResponseEnricher`s to add information to the `OpenTransaction`
 
+There are a few enricher implementations included in this library as well:
+- `RequestHeaderBlacklistEnricher`: adds headers to the `Request` in the `Context` except when their name is in a blacklist.
+- `ResponseHeaderBlacklistEnricher`: adds headers to the `Response` in the `Context` except when their name is in a blacklist.
+
 #### Combination
 
 Obviously the two middleware can be combined. The recommended way to do this is to hook up `TransactionMiddleware` first, then the `ErrorMiddleware` and finally the `OpenTransactionRequestEnrichmentMiddleware` and `OpenTransactionRequestEnrichmentMiddleware`. That way the transaction will be enriched, any error will correlated to the transaction and the transaction duration will be as realistic as possible.
