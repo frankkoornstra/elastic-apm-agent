@@ -104,19 +104,19 @@ final class ConvenienceContext implements Context
     }
 
     /**
+     * @Then the closed transaction has an http request span for :url
+     */
+    public function theClosedTransactionHasAnHttpRequestSpanFor(string $url): void
+    {
+        $this->assertSpanExists('GET ' . $url, 'http.request');
+    }
+
+    /**
      * @Given I send an http request for :url
      */
     public function iSendAnHttpRequestFor(string $url): void
     {
         $request = new Request('GET', $url);
         $this->httpClient->sendRequest($request);
-    }
-
-    /**
-     * @Then the closed transaction has an http request span for :url
-     */
-    public function theClosedTransactionHasAnHttpRequestSpanFor(string $url): void
-    {
-        $this->assertSpanExists('GET ' . $url, 'http.request');
     }
 }

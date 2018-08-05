@@ -12,3 +12,15 @@ Feature: Middleware
     Given I add the error middleware to my stack
      When I send a server request that throws an exception
      Then the error sent by the middleware is accepted
+
+  Scenario: enrich open transaction based on the request
+    Given I add the transaction middleware to my stack
+      And I add the open transaction request enrichment middleware to my stack
+     When I send the default server request
+     Then the open transaction is enriched with request data
+
+  Scenario: enrich open transaction based on the response
+    Given I add the transaction middleware to my stack
+      And I add the open transaction response enrichment middleware to my stack
+     When I send the default server request
+     Then the open transaction is enriched with response data
