@@ -68,7 +68,7 @@ $error = $error->onSystem(...)->inProcess(...); // Got it!
 
 ### Middleware
 
-To measure the response time and report errors (by catching exceptions), you can hook up the [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant middleware to your application.
+To measure the response time and report errors (by catching exceptions), you can hook up the [PSR-15](https://www.php-fig.org/psr/psr-15/) compliant middleware to your application. If you want to enrich the transaction that you send to the APM server based on the request or response, implement the `OpenTransactionRequestEnricher` or `OpenTransactionResponseEnricher` and hook up the middleware. 
 
 #### Transaction
 
@@ -80,9 +80,13 @@ You can add `Span`s and mark events to the `OpenTransaction` and when you give a
 
 If you want to catch and report `Throwable`s to APM, also include the `ErrorMiddleware` in your middleware stack. It will catch any `Throwable` and try to make as much sense of it as possible. To give the error even more context, you can on inject `Context` object on instantiation of the middleware. It will use that as the base for building context.
 
+#### Enrichment
+
+Sometimes you want to enrich the transaction with data from the request or response. To make this possible, hook up the `OpenTransactionRequestEnrichmentMiddleware` and `OpenTransactionRequestEnrichmentMiddleware` and inject your implementations of respectively `OpenTransactionRequestEnricher`s and `OpenTransactionResponseEnricher`s to add information to the `OpenTransaction`
+
 #### Combination
 
-Obviously the two middleware can be combined. The recommended way to do this is to wrap the `ErrorMiddlware` _inside_ the `TransactionMiddleware`. That way the error will correlated to the transaction and the transaction duration will be as realistic as possible, including the time it takes to report the error to the APM server for example.
+Obviously the two middleware can be combined. The recommended way to do this is to hook up `TransactionMiddleware` first, then the `ErrorMiddleware` and finally the `OpenTransactionRequestEnrichmentMiddleware` and `OpenTransactionRequestEnrichmentMiddleware`. That way the transaction will be enriched, any error will correlated to the transaction and the transaction duration will be as realistic as possible.
 
 ### Caching
 
