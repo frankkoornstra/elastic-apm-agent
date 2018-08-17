@@ -5,8 +5,8 @@ namespace TechDeCo\ElasticApmAgent\Tests\Unit\Message;
 
 use PHPUnit\Framework\TestCase;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
-use function \date_default_timezone_get;
-use function \date_default_timezone_set;
+use function date_default_timezone_get;
+use function date_default_timezone_set;
 
 final class TimestampTest extends TestCase
 {
