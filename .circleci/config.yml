@@ -5,13 +5,13 @@ workflows:
   quality-tools:
     jobs:
       - unit-tests:
-          context: Generic
+          context: Dummy
       - acceptance-tests:
-          context: Generic
+          context: Dummy
       - phpstan:
-          context: Generic
+          context: Dummy
       - phpcs:
-          context: Generic
+          context: Dummy
 
 jobs:
   unit-tests:
