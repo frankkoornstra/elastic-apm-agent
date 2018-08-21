@@ -1,7 +1,7 @@
 FROM php:7.2.2-cli
 
 RUN apt-get update \
-    && apt-get install libzip-dev unzip
+    && apt-get -y install libzip-dev unzip
 
 
 RUN pecl install xdebug-2.6.0 zip \
