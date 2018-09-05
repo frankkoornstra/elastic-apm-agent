@@ -1,5 +1,5 @@
 all: style tests
-tests: test-unit test-integration test-acceptance
+tests: test-unit test-integration test-infection test-acceptance
 style: phpcs phpstan
 
 # Make configuration
@@ -21,8 +21,9 @@ test-integration:
 	mkdir -p build/integration && \
 	./vendor/bin/phpunit --testsuite=integration --log-junit build/integration/results.xml
 test-acceptance:
-	mkdir -p build/acceptance && \
-	docker-compose -f docker-compose-test.yml run test sh -c "sleep 20 && cd /project && php vendor/bin/behat --profile ci -vvv"
+	docker-compose -f docker-compose-test.yml run test sh -c 'sleep 20 && php vendor/bin/behat --profile ci -vvv'
+test-mutation:
+	docker-compose -f docker-compose-test.yml run test sh -c 'vendor/bin/infection -j$$(nproc)'
 
 # CircleCI specific settings
 ci-acceptance-environment:
