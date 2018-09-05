@@ -2,6 +2,25 @@ version: 2
 
 workflows:
   version: 2
+  nigthly:
+    triggers:
+      - schedule:
+          cron: "42 2 * * *"
+          filters:
+            branches:
+              only:
+              - master
+    jobs:
+      - unit-tests:
+          context: Generic
+      - acceptance-tests:
+          context: Generic
+      - phpstan:
+          context: Generic
+      - phpcs:
+          context: Generic
+      - phpinfection:
+          context: Generic
   quality-tools:
     jobs:
       - unit-tests:
