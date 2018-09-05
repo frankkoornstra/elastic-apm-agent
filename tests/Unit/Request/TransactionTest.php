@@ -19,6 +19,7 @@ final class TransactionTest extends TestCase
     {
         $id      = Uuid::uuid4();
         $date    = new Timestamp('2018-02-14T10:11:12.131');
+        $utcDate = (clone $date)->setTimezone(new \DateTimeZone('UTC'));
         $message = (new TransactionMessage(13.2, $id, 'alloy', $date, 'zeta'));
         $agent   = new VersionedName('thunderjaw', '1.0');
         $service = new Service($agent, 'rockbreaker');
@@ -45,7 +46,7 @@ final class TransactionTest extends TestCase
                     'duration' => 13.2,
                     'id' => $id->toString(),
                     'name' => 'alloy',
-                    'timestamp' => '2018-02-14T10:11:12.131000Z',
+                    'timestamp' => $utcDate->format('Y-m-d\TH:i:s.u\Z'),
                     'type' => 'zeta',
                 ],
             ],
@@ -58,6 +59,7 @@ final class TransactionTest extends TestCase
     {
         $id      = Uuid::uuid4();
         $date    = new Timestamp('2018-02-14T10:11:12.131');
+        $utcDate = (clone $date)->setTimezone(new \DateTimeZone('UTC'));
         $message = (new TransactionMessage(13.2, $id, 'alloy', $date, 'zeta'));
         $agent   = new VersionedName('thunderjaw', '1.0');
         $service = new Service($agent, 'rockbreaker');
@@ -78,7 +80,7 @@ final class TransactionTest extends TestCase
                     'duration' => 13.2,
                     'id' => $id->toString(),
                     'name' => 'alloy',
-                    'timestamp' => '2018-02-14T10:11:12.131000Z',
+                    'timestamp' => $utcDate->format('Y-m-d\TH:i:s.u\Z'),
                     'type' => 'zeta',
                 ],
             ],

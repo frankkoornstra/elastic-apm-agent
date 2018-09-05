@@ -15,8 +15,8 @@ final class Timestamp extends DateTimeImmutable implements JsonSerializable
 
     public function __toString(): string
     {
-        $me = clone $this;
+        $utc = $this->setTimezone(new \DateTimeZone('UTC'));
 
-        return $me->format('Y-m-d\TH:i:s.u\Z');
+        return $utc->format('Y-m-d\TH:i:s.u\Z');
     }
 }
