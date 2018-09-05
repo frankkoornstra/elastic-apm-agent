@@ -2,7 +2,9 @@ version: '3'
 
 services:
   test:
-    image: php:7.2.2-cli
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-php
     volumes:
       - .:/project
     depends_on:
