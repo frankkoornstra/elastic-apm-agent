@@ -12,6 +12,8 @@ workflows:
           context: Generic
       - phpcs:
           context: Generic
+      - phpinfection:
+          context: Generic
 
 jobs:
   unit-tests:
@@ -61,6 +63,27 @@ jobs:
           path: build/acceptance
       - store_artifacts:
           path: build/acceptance
+
+  phpinfection:
+    machine: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - project-dependencies-{{ checksum "~/project/composer.lock" }}
+          - composer-cache
+      - run: docker run --rm --volume $(pwd):/app --entrypoint /bin/bash composer -c "composer config -g github-oauth.github.com $GITHUB_TOKEN && composer install -n -o"
+      - save_cache:
+          key: project-dependencies-{{ checksum "~/project/composer.lock" }}
+          paths:
+          - ~/project/vendor
+      - save_cache:
+          key: composer-cache
+          paths:
+          - ~/.composer/cache
+      - run: make test-mutation
+      - store_artifacts:
+          path: build/phpinfection
 
   phpstan:
     docker:
