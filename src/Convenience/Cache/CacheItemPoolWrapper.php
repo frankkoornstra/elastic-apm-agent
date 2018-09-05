@@ -53,10 +53,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
      */
     public function getItem($key): CacheItemInterface
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->getItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -71,14 +71,14 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
     /**
      * @param string[] $keys
      * @throws InvalidArgumentException
-     * @return array|Traversable|CacheItemInterface[]
+     * @return array|Traversable
      */
     public function getItems(array $keys = [])
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->getItems($keys);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -96,10 +96,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
      */
     public function hasItem($key): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->hasItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -113,10 +113,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
 
     public function clear(): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->clear();
         } finally {
             $this->transaction->addSpan(new Span(
@@ -134,10 +134,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
      */
     public function deleteItem($key): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->deleteItem($key);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -155,10 +155,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
      */
     public function deleteItems(array $keys): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->deleteItems($keys);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -172,10 +172,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
 
     public function save(CacheItemInterface $item): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->save($item);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -189,10 +189,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
 
     public function saveDeferred(CacheItemInterface $item): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->saveDeferred($item);
         } finally {
             $this->transaction->addSpan(new Span(
@@ -206,10 +206,10 @@ final class CacheItemPoolWrapper implements CacheItemPoolInterface, OpenTransact
 
     public function commit(): ?bool
     {
-        try {
-            $start  = Stopwatch::start();
-            $offset = $this->transaction->getStartOffset();
+        $start  = Stopwatch::start();
+        $offset = $this->transaction->getStartOffset();
 
+        try {
             return $this->pool->commit();
         } finally {
             $this->transaction->addSpan(new Span(

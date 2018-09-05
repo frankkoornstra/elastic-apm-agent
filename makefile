@@ -8,8 +8,8 @@ SHELL = /bin/sh
 
 # Style
 phpstan:
-	./vendor/bin/phpstan analyse -c phpstan.neon -l max src
-	./vendor/bin/phpstan analyse -c phpstan.neon -l 4 tests
+	./vendor/bin/phpstan analyse -l 7 src
+	./vendor/bin/phpstan analyse -l 4 tests
 phpcs:
 	./vendor/bin/phpcs
 

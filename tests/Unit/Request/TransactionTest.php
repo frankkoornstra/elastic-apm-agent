@@ -43,7 +43,7 @@ final class TransactionTest extends TestCase
             'transactions' => [
                 [
                     'duration' => 13.2,
-                    'id' => (string) $id,
+                    'id' => $id->toString(),
                     'name' => 'alloy',
                     'timestamp' => '2018-02-14T10:11:12.131000Z',
                     'type' => 'zeta',
@@ -76,7 +76,7 @@ final class TransactionTest extends TestCase
             'transactions' => [
                 [
                     'duration' => 13.2,
-                    'id' => (string) $id,
+                    'id' => $id->toString(),
                     'name' => 'alloy',
                     'timestamp' => '2018-02-14T10:11:12.131000Z',
                     'type' => 'zeta',
