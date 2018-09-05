@@ -16,6 +16,7 @@ use TechDeCo\ElasticApmAgent\Exception\ClientException;
 use TechDeCo\ElasticApmAgent\Request\Error;
 use TechDeCo\ElasticApmAgent\Request\Transaction;
 use Throwable;
+use function assert;
 use function count;
 use function json_encode;
 use function register_shutdown_function;
@@ -48,7 +49,7 @@ final class HttplugAsyncClient implements Client
     private $logger;
 
     /**
-     * @throws DiscoveryException
+     * @throws DiscoveryException\NotFoundException
      */
     public function __construct(
         LoggerInterface $logger,
@@ -70,11 +71,14 @@ final class HttplugAsyncClient implements Client
      */
     public function sendTransaction(Transaction $transaction): void
     {
+        $encoded = json_encode($transaction);
+        assert($encoded !== false);
+
         $request = $this->httpMessageFactory->createRequest(
             'POST',
             $this->config->getTransactionsEndpoint(),
             [],
-            json_encode($transaction)
+            $encoded
         );
 
         $this->sendRequest($request);
@@ -85,11 +89,14 @@ final class HttplugAsyncClient implements Client
      */
     public function sendError(Error $error): void
     {
+        $encoded = json_encode($error);
+        assert($encoded !== false);
+
         $request = $this->httpMessageFactory->createRequest(
             'POST',
             $this->config->getErrorsEndpoint(),
             [],
-            json_encode($error)
+            $encoded
         );
 
         $this->sendRequest($request);

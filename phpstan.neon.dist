@@ -1,0 +1,21 @@
+includes:
+	- vendor/jangregor/phpstan-prophecy/src/extension.neon
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+
+parameters:
+    polluteCatchScopeWithTryAssignments: true
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Ignore Prophecy mock stuff
+        - '#Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy::#'
+        # Behat interface mismatch that does work
+        - '#Call to an undefined method Behat\\Testwork\\Environment\\Environment::getContext()#'
+        # Exceptions / exception interfaces that don't implement right methods or are not Throwable
+        - '#PHPDoc tag @throws with type .*Psr\\Cache\\InvalidArgumentException.* is not subtype of Throwable#'
+        - '#PHPDoc tag @throws with type .*Http\\Client\\Exception.* is not subtype of Throwable#'
+        # Also due to the bug fixed by https://github.com/Jan0707/phpstan-prophecy/pull/19
+        - '#Call to an undefined method .*::willReturn#'
+        - '#Call to an undefined method .*::willThrow#'
+        - '#Call to an undefined method .*::shouldBeCalled#'
+        - '#Call to an undefined method .*::shouldNotBeCalled#'
+        - '#Call to an undefined method .*::shouldBeCalledTimes#'

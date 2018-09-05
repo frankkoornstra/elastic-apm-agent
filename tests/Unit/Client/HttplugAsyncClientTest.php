@@ -138,7 +138,7 @@ final class HttplugAsyncClientTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->request);
         $this->httpClient->sendAsyncRequest(Argument::type(RequestInterface::class))
-                         ->shouldBecalled()
+                         ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
         $this->client->sendTransaction($this->transaction);
@@ -176,7 +176,7 @@ final class HttplugAsyncClientTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->request);
         $this->httpClient->sendAsyncRequest(Argument::type(RequestInterface::class))
-                         ->shouldBecalled()
+                         ->shouldBeCalled()
                          ->willReturn($this->promise->reveal());
 
         $this->client->sendError($this->error);

@@ -14,6 +14,8 @@ use TechDeCo\ElasticApmAgent\Convenience\Cache\CacheItemPoolWrapper;
 use TechDeCo\ElasticApmAgent\Convenience\OpenTransaction;
 use TechDeCo\ElasticApmAgent\Message\Timestamp;
 use TechDeCo\ElasticApmAgent\Tests\Dummy\DummyCacheItemPool;
+use function assert;
+use function is_array;
 
 final class CacheItemPoolWrapperTest extends TestCase
 {
@@ -96,7 +98,10 @@ final class CacheItemPoolWrapperTest extends TestCase
 
     public function testGetItemsReturn(): void
     {
-        Assert::assertSame($this->item, $this->directWrapper->getItems(['foo'])[0]);
+        $itemList = $this->directWrapper->getItems(['foo']);
+        assert(is_array($itemList));
+
+        Assert::assertSame($this->item, $itemList[0]);
     }
 
     public function testGetItemsRecordsBusyTime(): void

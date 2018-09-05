@@ -33,7 +33,7 @@ final class TransactionTest extends TestCase
                 'tags' => ['beast' => 'thunderjaw'],
             ],
             'duration' => 13.2,
-            'id' => (string) $id,
+            'id' => $id->toString(),
             'name' => 'alloy',
             'result' => '204',
             'timestamp' => '2018-02-14T10:11:12.131000Z',
@@ -80,7 +80,7 @@ final class TransactionTest extends TestCase
 
         $expected = [
             'duration' => 13.2,
-            'id' => (string) $id,
+            'id' => $id->toString(),
             'name' => 'alloy',
             'timestamp' => '2018-02-14T10:11:12.131000Z',
             'type' => 'zeta',
