@@ -22,6 +22,7 @@ final class ErrorTest extends TestCase
         $process = new Process(213);
         $system  = (new System())->atHost('hades');
         $date    = new Timestamp('2018-02-14T10:11:12.131');
+        $utcDate = (clone $date)->setTimezone(new \DateTimeZone('UTC'));
         $log     = new Log('blabla');
         $message = ErrorMessage::fromLog($log, $date);
 
@@ -43,7 +44,7 @@ final class ErrorTest extends TestCase
             'errors' => [
                 [
                     'log' => ['message' => 'blabla'],
-                    'timestamp' => '2018-02-14T10:11:12.131000Z',
+                    'timestamp' => $utcDate->format('Y-m-d\TH:i:s.u\Z'),
                 ],
             ],
         ];
@@ -56,6 +57,7 @@ final class ErrorTest extends TestCase
         $agent   = new VersionedName('thunderjaw', '1.0');
         $service = new Service($agent, 'rockbreaker');
         $date    = new Timestamp('2018-02-14T10:11:12.131');
+        $utcDate = (clone $date)->setTimezone(new \DateTimeZone('UTC'));
         $log     = new Log('blabla');
         $message = ErrorMessage::fromLog($log, $date);
 
@@ -73,7 +75,7 @@ final class ErrorTest extends TestCase
             'errors' => [
                 [
                     'log' => ['message' => 'blabla'],
-                    'timestamp' => '2018-02-14T10:11:12.131000Z',
+                    'timestamp' => $utcDate->format('Y-m-d\TH:i:s.u\Z'),
                 ],
             ],
         ];
