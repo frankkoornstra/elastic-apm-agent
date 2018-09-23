@@ -5,14 +5,13 @@
 [![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/frankkoornstra/elastic-apm-agent.svg)](https://scrutinizer-ci.com/g/frankkoornstra/elastic-apm-agent/?branch=master)
 [![Packagist](https://img.shields.io/packagist/v/techdeco/elastic-apm-agent.svg)](https://packagist.org/packages/techdeco/elastic-apm-agent)
 ![Packagist](https://img.shields.io/packagist/dt/techdeco/elastic-apm-agent.svg)
-![Github Releases](https://img.shields.io/github/downloads/frankkoornstra/elastic-apm-agent/latest/total.svg)
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/techdeco/elastic-apm-agent.svg)
 
 Release 6.2 of the Elastic stack saw to the the dawn of [Application Performance Monitoring](https://www.elastic.co/guide/en/apm/server/current/overview.html). APM agents in several languages were released with it but _somehow_ PHP was not amongst them ¯\_(ツ)_/¯ This library adds that APM agent so we can happily ship our application performance measurements to the Elastic APM Server.
 
 **ATTENTION: Alpha**
 
-Currently the library is in the alpha phase, meaning the interface might still change (drastically) and it is not ready for production use. I'd highly appreciate it if you try out the current version and [report any issues you come across](https://github.com/frankkoornstra/elastic-apm-agent/issues). 
+Currently the library is in the alpha phase, meaning the interface might still change and it is not ready for production use. I'd highly appreciate it if you try out the current version and [report any issues you come across](https://github.com/frankkoornstra/elastic-apm-agent/issues).
 
 ## Installation
 
@@ -21,6 +20,23 @@ Add the library to your application with Composer:
 ```bash
 composer require techdeco/elastic-apm-agent
 ```
+
+This will, however, only work if you have an implementations of the following virtual packages installed (more info on each of them below):
+- [php-http/async-client-implementation](https://packagist.org/providers/php-http/async-client-implementation)
+- [php-http/message-factory-implementation](https://packagist.org/providers/php-http/message-factory-implementation)
+- [psr/log-implementation](https://packagist.org/providers/psr/log-implementation)
+
+This seems like a bit of a hassle for you, maybe even a bit lazy from our side - why not let this package just choose one? - but it provides you with the most flexibility and a minimal chance of conflicts with packages already used in your project.
+
+Let's say you have none of these implementations in your project and you choose respectively Guzzle 6, PHP HTTP's Message and Monolog; you can install this library with:
+
+```bash
+composer require techdeco/elastic-apm-agent \
+                 php-http/guzzle6-adapter \
+                 php-http/message \
+                 monolog/monolog
+```
+
 
 ### HTTP client dependency
 
